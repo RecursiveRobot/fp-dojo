@@ -1,0 +1,20 @@
+{
+    "name": "fp-dojo",
+    "version": "1.0.0",
+    "description": "A tour of functional programming in which we will construct a slack bot.",
+    "main": "bin/main.js",
+    "scripts": {
+        "test": "mocha tests/root.js"
+    },
+    "keywords": [
+        "FP",
+        "Functional",
+        "Programming",
+        "Slack",
+        "Bot",
+        "Chat"
+    ],
+    "author": "Edward John Steere",
+    "contributers": ["Attie Naude"]
+    "license": "ISC"
+}
