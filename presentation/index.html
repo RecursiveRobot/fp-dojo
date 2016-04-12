@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Functional Programming Dojo</title>
+
+		<meta name="description" content="Dojo - Introduction to Functional Programming">
+		<meta name="author" content="Attie Naude and Edward Steere">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/moon.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/androidstudio.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h2>Dojo - Introduction to Functional Programming</h2>
+					<p>
+						<small>Attie Naude and Edward Steere</small>
+					</p>
+				</section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ## Lesson 1 : Purity and State
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Pure Functions
+                        
+                        - No dependency on external state
+                        - No side-effects
+                        - Given the same input, always produces the same output
+                          - f(x) === f(x)
+                        - No temporal coupling
+                    </script>
+                </section>
+
+				<section>
+					<h2>Impure vs. Pure</h2>
+					<pre><code class="hljs" data-trim contenteditable data-noescape>
+// impure
+var minimum = 21;
+
+var checkAge = function(age) {
+  return age >= minimum;
+};
+
+
+// pure
+var checkAge = function(age) {
+  var minimum = 21;
+  return age >= minimum;
+};
+					</code></pre>
+				</section>
+                
+                <section>
+					<h2>Pure or Impure?</h2>
+					<pre><code class="hljs" data-trim contenteditable>
+var Greeter = (function () {
+    function Greeter(message) {
+        this.greeting = message;
+    }
+    Greeter.prototype.greet = function () {
+        return "Hello, " + this.greeting;
+    };
+    return Greeter;
+}());
+					</code></pre>
+				</section>
+                
+                <section>
+					<h2>Impure!</h2>
+					<pre><code class="hljs" data-trim contenteditable>
+var Greeter = (function () {
+    function Greeter(message) {
+        this.greeting = message;
+    }
+    Greeter.prototype.greet = function () {
+        return "Hello, " + this.greeting;
+    };
+    return Greeter;
+}());
+
+var greeter = new Greeter("world");
+greeter.greet();  
+// "Hello, world"
+
+greeter.greeting = "darkness, my old friend...";
+greeter.greet();  
+// "Hello, darkness, my old friend..."
+					</code></pre>
+				</section>
+                
+                <section>
+					<h2>Pure or Impure?</h2>
+					<pre><code class="hljs" data-trim contenteditable>
+var rollD20 = function() {
+  return Math.round(Math.random() * 20);
+};
+					</code></pre>
+				</section>
+                
+                <section>
+					<h2>Impure!</h2>
+					<pre><code class="hljs" data-trim contenteditable>
+var rollD20 = function() {
+  return Math.ceil(Math.random() * 20);
+};
+
+var firstRoll = rollD20();
+// 11
+
+var secondRoll = rollD20();
+// 3
+					</code></pre>
+				</section>
+                
+                <section>
+					<h2>Pure or Impure?</h2>
+					<pre><code class="hljs" data-trim contenteditable>
+var squareRoot = function(value) {
+  console.log("Value entered: " + value);
+  return Math.sqrt(value);
+};
+					</code></pre>
+				</section>
+                
+                <section>
+					<h2>Impure!</h2>
+					<pre><code class="hljs" data-trim contenteditable>
+var squareRoot = function(value) {
+  console.log("Value entered: " + value);
+  // Side-effect: Mutates console buffer ...
+  return Math.sqrt(value);
+};
+					</code></pre>
+				</section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### What is a function anyway?
+                        
+                        From mathisfun.com:
+
+                        > A function is a special relationship between values:
+                        
+                        > Each of its input values gives back exactly one output value.
+
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Function
+                    
+                        ![Function](images/function-sets.gif "Function")
+                        
+                        <small>[Source](http://www.mathsisfun.com/sets/function.html)</small>
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Not a Function
+                    
+                        ![Not a Function](images/relation-not-function.gif "Not a Function")
+                        
+                        <small>[Source](http://www.mathsisfun.com/sets/function.html)</small>
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Vertical Line Test
+                    
+                        <img src="images/vertical-line-test.gif" />
+                        
+                        <small>[Source](http://www.mathsisfun.com/sets/function.html)</small>
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Side Effects
+                        From Mostly Adequate Guide*:
+                        >A *side effect* is a change of system state or *observable interaction* with the outside world that occurs during the calculation of a result.
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Examples:
+                        
+                        * changing the file system
+                        * inserting a record into a database
+                        * making an http call
+                        * mutations
+                        * printing to the screen / logging
+                        * obtaining user input
+                        * querying the DOM
+                        * accessing system state
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ## Why Purity?
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Benefits:
+                        
+                        <ul>
+                            <li class="fragment">Cacheable Results</li>
+                            <ul class="fragment">
+                                <li>Memoization</li>
+                            </ul>
+                            <li class="fragment">Referential Transparency
+                            <li class="fragment">Self-Documenting
+                            <li class="fragment">Testable
+                            <li class="fragment">Easy to Reason About</li>
+                            <ul class="fragment">
+                                <li>No temporal coupling</li>
+                            </ul>
+                            <li class="fragment">Parallelizable
+                        </ul>
+
+                    </script>
+                </section>
+                
+
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ## Lesson 2 : Higher Order Functions
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Higher Order Functions
+                        
+                        * Can be stored in variables
+                        * Can be passed in as parameters to other functions
+                        * Can be returned as the result of a function call
+                    </script>
+                </section>
+                
+                <section>
+					<h3>Function stored in Variable</h3>
+					<pre><code class="hljs" data-trim contenteditable>
+var double = function(x) {
+  x * 2;
+};
+					</code></pre>
+				</section>
+                
+                <section>
+					<h3>Function as Parameter</h3>
+					<pre><code class="hljs" data-trim contenteditable>
+var double = x => x * 2;
+
+function apply(func, value) {
+  return func(value);
+};
+
+apply(double, 5);
+// 10
+					</code></pre>
+				</section>
+                
+                <section>
+					<h3>Function as Result</h3>
+					<pre><code class="hljs" data-trim contenteditable>
+var getDoubleFunction = function() {
+  return x => x * 2;
+};
+
+var double = getDoubleFunction();
+
+double(5);
+// 10
+					</code></pre>
+				</section>
+
+
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ## Lesson 3 : Currying
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Currying
+                        
+                        - Call function with a subset of parameters
+                        - Receive new function expecting the rest of the parameters
+                          - Provided parameters captured in closure
+                        - Also known as partial application
+                    </script>
+                </section>
+                
+                <section>
+					<h3>Addition</h3>
+					<pre><code class="hljs" data-trim contenteditable>
+// Uncurried..
+function add(a, b) {
+    return a + b;
+}
+
+var c = add(1, 2);
+// 3
+					</code></pre>
+				</section>
+                
+                <section>
+					<h3>Addition</h3>
+					<pre><code class="hljs" data-trim contenteditable>
+// Curried...
+function addCurried(a, b) {
+    return function(b) {
+        return a + b;
+    }
+}
+
+var d = addCurried(1)(2);
+// 3
+
+var add5 = addCurried(5);
+// add5 :: int -> int
+var e = add5(2);
+// 7
+					</code></pre>
+				</section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Manual Currying
+                        
+                        - Easy to implement
+                        - Easy to understand
+                        - Doesn't scale well
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Alternatives
+                        
+                        - Switch to a proper FP language
+                    </script>
+                </section>
+                
+                <section>
+					<h3>F#</h3>
+					<pre><code class="hljs" data-trim contenteditable>
+let add a b c d e =
+    a + b + c + d + e
+
+let addSome = add 1 2
+let addSomeMore = addSome 3 4
+let answer = addSomeMore 5
+					</code></pre>
+				</section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Alternatives
+                        
+                        - ~~Switch to a proper FP language~~
+                        - Use a library
+                    </script>
+                </section>
+                
+                
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Enter Ramda
+                        
+                        - Functional library for JS
+                        - Loads of utility functions for
+                          - Currying
+                          - Composition
+                          - List Manipulation
+                          - Logic
+                        - Automatically Curries all functions
+                        
+                    </script>
+                </section>
+                
+                <section>
+					<h3>Ramda to the Rescue!</h3>
+					<pre><code class="hljs" data-trim contenteditable>
+// Ramda
+var R = require('ramda');
+
+function addNumbers(a, b, c, d, e){
+  return a + b + c + d + e;
+}
+
+// curriedAddition :: int -> int -> int -> int -> int -> int
+var curriedAddition = R.curry(addNumbers);
+
+var f = curriedAddition(1)(2)(5)(3)(4);
+// 15
+					</code></pre>
+				</section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Exercises
+                        ---
+                        * **Navigate to** `lessons`
+                        * **Run** `npm install`
+                        * **Navigate to** `lessons\exercises\curry`
+                        * **Complete an exercise in** `curry.js`
+                        * **Run** `mocha curry_exercises_spec.js` **to verify results**
+                        * **Rinse, repeat**
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ## Lesson 4 : Composition
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Combine two functions into one
+                        
+```
+var compose = function(f,g) {
+  return function(x) {
+    return f(g(x)); 
+  };
+};
+```
+                        
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Composition
+                        
+                        ![Without Composition](images/cat_comp1.png "Without Composition")
+                        ![With Composition](images/cat_comp2.png "With Composition")
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Composition Example
+                        
+```
+var openingSpan = function(input) {
+	return "<span>" + input;
+};
+
+var closingSpan = function(input) {
+	return input + "</span>";
+};
+
+var encloseInSpan = compose(closingSpan, openingSpan);
+
+var result = encloseInSpan("Han Shot First!");
+// <span>Han Shot First!</span>
+```
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Composition is Associative
+                        
+```
+compose(f, compose(g, h)) == compose(compose(f, g), h)
+```
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Associativity Example
+                        
+```
+var openingSpan = function(input) {
+	return "<span>" + input;
+};
+
+var closingSpan = function(input) {
+	return input + "</span>";
+};
+
+var openingBody = function(input) {
+	return "<body>" + input;
+};
+
+var closingBody = function(input) {
+	return input + "</body>";
+};
+
+var htmlEscaper1 = R.compose(closingBody, closingSpan, openingSpan, openingBody);
+var htmlEscaper2 = R.compose(R.compose(closingBody, closingSpan), openingSpan, openingBody);
+var htmlEscaper3 = R.compose(closingBody, R.compose(closingSpan, openingSpan), openingBody);
+var htmlEscaper4 = R.compose(R.compose(closingBody, closingSpan), R.compose(openingSpan, openingBody));
+```
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Pointfree style
+                        
+                        * Don't specify the data upon which a function operates
+                        * Data is passed in as final parameter to composed function
+                        
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Example 1
+                        
+```
+//not pointfree because we mention the data: word
+var snakeCase = function(word) {
+  return word.toLowerCase().replace(/\s+/ig, '_');
+};
+
+//pointfree
+var snakeCase = compose(replace(/\s+/ig, '_'), toLowerCase);
+```
+                        
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Example 2
+                        
+```js
+//not pointfree because we mention the data: name
+var initials = function(name) {
+  return name.split(' ').map(compose(toUpperCase, head)).join('. ');
+};
+
+//pointfree
+var initials = compose(join('. '), map(compose(toUpperCase, head)), split(' '));
+
+initials("hunter stockton thompson");
+// 'H. S. T'
+```
+                        
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Pro's and Con's
+                        
+                        * No need to name input paramters
+                        * Less readable in some instances
+                        
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Exercises
+                        ---
+                        * **Navigate to** `lessons\exercises\compose`
+                        * **Complete an exercise in** `compose.js`
+                        * **Run** `mocha compose_exercises_spec.js` **to verify results**
+                        * **Rinse, repeat**
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ## Lesson 5 : Hindley-Milner Type System
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Hindley-Milner Type System
+                        
+                        * Used in strongly typed languages
+                        * Algebraic type system
+                        * Includes algorithm for determining most general type satisfying function constraints
+                        * Specification for Type Signatures
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Type Signatures Examples
+                        
+```
+//  strLength :: String -> Number
+var strLength = function(s) {
+  return s.length;
+}
+
+//  join :: String -> [String] -> String
+var join = curry(function(what, xs) {
+  return xs.join(what);
+});
+
+//  match :: Regex -> String -> [String]
+var match = curry(function(reg, s) {
+  return s.match(reg);
+});
+```
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Type Signatures Examples
+                        
+```
+//  replace :: Regex -> String -> String -> String
+var replace = curry(function(reg, sub, s) {
+  return s.replace(reg, sub);
+});
+
+// head :: [a] -> a
+
+// filter :: (a -> Bool) -> [a] -> [a]
+```
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Type Constraints
+                        
+                        * Additional constraints imposed on types
+                        * Included in type signatures
+                        * Inferred and imposed in FP languages
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Type Constraints
+                        
+```
+// sort :: Ord a => [a] -> [a]
+
+// assertEqual :: (Eq a, Show a) => a -> a -> Assertion
+
+// Etc...
+```
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
+                        ## Credits:
+                        * [Professor Frisby's Mostly Adequate Guide to Functional Programming](https://github.com/MostlyAdequate/mostly-adequate-guide)
+                    </script>
+                </section>
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+                slideNumber: true,
+
+				transition: 'zoom', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
