@@ -11,7 +11,7 @@ Date Authored:
 Introduction
 ------------
 
-
+This dojo will introduce you to the Functional Programming paradigm.  This includes the theory of high-level concepts and practical examples.
 
 What we Expect of You
 ---------------------
@@ -19,47 +19,48 @@ What we Expect of You
 You are not expected to know anything about functional
 programming. We're here to take you from zero to hero.
 
-We expect to know basic JavaScript, including the syntax for
+We expect you to know basic JavaScript though, including the syntax for
 lambdas.
 
 Goals
 -----
 
-TODO <Some waffling about introducing them to the basic concepts of FP>
+* To introduce you to the high-level concepts of Functional Programming
+* To equip you with all the tools needed to start coding JavaScript in a functional style
+* To peak your interest enough to foster further research into FP
 
 Preparation
 -----------
 
 You need to have a local copy of this repo and you need to have node
 installed. To make sure that your installation is working correctly
-you can run 'mocha tests/<exercise tests name>.js -w'. You should see
-output like the following:
-
-TODO <output goes here>
-
-Lesson 1: State and purity
---------------------------
-
-
-
-Lesson 2: Higher Order Functions
---------------------------------
-
-
-
-Lesson 3: Currying
-------------------
+you can run 
+```
+mocha lessons/exercises/compose/compose_exercises_spec.js
+```
+You should see output like the following:
+```
+  Compose Exercises
+    √ Exercise 1
+    1) Exercise 2
+    √ Exercise 3
+    2) Exercise 4
+    √ Bonus 1
+    √ Bonus 2
 
 
+  4 passing (13ms)
+  2 failing
+```
 
-Lesson 4: Composition
----------------------
+Theory Overview
+---------------
 
-
-
-Lesson 5: Erroneous Control Flow Handling
------------------------------------------
-
+* Lesson 1: State and purity
+* Lesson 2: Higher Order Functions
+* Lesson 3: Currying
+* Lesson 4: Composition
+* Lesson 5: Hindley-Milner Type System
 
 
 Exercises
