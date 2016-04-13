@@ -36,7 +36,10 @@ You need to have a local copy of this repo and you need to have node
 installed. To make sure that your installation is working correctly
 you can run 
 ```
-mocha lessons/exercises/compose/compose_exercises_spec.js
+cd lessons
+npm install
+cd lessons/exercises/compose
+mocha compose_exercises_spec.js
 ```
 You should see output like the following:
 ```
