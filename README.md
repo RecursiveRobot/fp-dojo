@@ -37,6 +37,7 @@ installed. To make sure that your installation is working correctly
 you can run 
 ```
 npm install
+npm install mocha -g
 cd lessons/exercises/compose
 mocha compose_exercises_spec.js
 ```
