@@ -4,7 +4,7 @@
     "description": "A tour of functional programming in which we will construct a slack bot.",
     "main": "index.js",
     "scripts": {
-        "test": "mocha tests/root.js"
+        "test": "mocha practical/tests/bot_spec.js"
     },
     "keywords": [
         "FP",

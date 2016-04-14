@@ -17,7 +17,7 @@ var CARS = [
 // use _.compose() to rewrite the function below. Hint: _.prop() is curried.
 var isLastInStock = function(cars) {
   var reversed_cars = _.last(cars);
-  return _.prop('in_stock', reversed_cars)
+    return _.prop('in_stock', reversed_cars);
 };
 
 // Exercise 2:

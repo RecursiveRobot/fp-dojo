@@ -17,6 +17,7 @@
 #+AUTHOR: Edward John Steere
 #+DATE: 13/04/2016
 #+TITLE: Functional Slack Bot in Javascript
+#+STARTUP: showall
 
 * Introduction
 
