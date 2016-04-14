@@ -11,7 +11,9 @@ Date Authored:
 Introduction
 ------------
 
-This dojo will introduce you to the Functional Programming paradigm.  This includes the theory of high-level concepts and practical examples.
+This dojo will introduce you to the Functional Programming paradigm.
+This includes the theory of high-level concepts and practical
+examples.
 
 What we Expect of You
 ---------------------
@@ -26,7 +28,8 @@ Goals
 -----
 
 * To introduce you to the high-level concepts of Functional Programming
-* To equip you with all the tools needed to start coding JavaScript in a functional style
+* To equip you with all the tools needed to start coding JavaScript in
+  a functional style
 * To peak your interest enough to foster further research into FP
 
 Preparation

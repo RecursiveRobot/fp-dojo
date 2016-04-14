@@ -1,0 +1,55 @@
+#+OPTIONS: html-link-use-abs-url:nil html-postamble:auto
+#+OPTIONS: html-preamble:t html-scripts:t html-style:t
+#+OPTIONS: html5-fancy:nil tex:t
+#+HTML_DOCTYPE: xhtml-strict
+#+HTML_CONTAINER: div
+#+DESCRIPTION:
+#+KEYWORDS:
+#+HTML_LINK_HOME:
+#+HTML_LINK_UP:
+#+HTML_MATHJAX:
+#+HTML_HEAD:
+#+HTML_HEAD_EXTRA:
+#+SUBTITLE:
+#+INFOJS_OPT:
+#+CREATOR: <a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.3.4)
+#+LATEX_HEADER:
+#+AUTHOR: Edward John Steere
+#+DATE: 13/04/2016
+#+TITLE: Functional Slack Bot in Javascript
+
+* Introduction
+
+In this practical we'll write a slack bot in JavaScript using the
+Ramda library and some helper libraries to keep things as functional
+as possible.
+
+What will our bot be able to do?
+
+Nothing too special. At first he will echo back at you using
+/dangerous/ side effects (!?) When we are done he will give the
+appearance of understanding some very basic conversation queues (this
+is the main part which we'll be interested in).
+
+* But _Side Effects_!?
+
+Side effects, as we discovered in the first part of this dojo, are
+impure. However, any useful program must make use of side effects to
+interact with the world outside of a computer -- how useful is it to
+run a program which adds two numbers and doesn't communicate anything
+about it?
+
+The topic of dealing with side effects is outside of the scope of this
+dojo, so what we've done is provide you with a harness which will
+allow you to simply plonk your nice pure function in (String -> String
+-> String) and behold as our slack bot comes to life!!!
+
+* What We Wont Explicitly Cover
+
+ - Setting up a slack bot integration token etc.
+   (You can find steps to do this in the appendix)
+ - Running your slack bot on a web server.
+   (Nothing special here -- just find a server :P )
+
+* Getting Started
+
