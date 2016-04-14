@@ -27,7 +27,7 @@ Goals
 
 * To introduce you to the high-level concepts of Functional Programming
 * To equip you with all the tools needed to start coding JavaScript in a functional style
-* To peak your interest enough to foster further research into FP
+* To pique your interest enough to foster further research into FP
 
 Preparation
 -----------
