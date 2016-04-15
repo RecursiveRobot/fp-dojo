@@ -139,7 +139,7 @@ function initialGreeting (userNames) {
         return "Hello " + _.head (userNames) + "!";
     } else {
         return "Hello "
-            + _.join (", ") (_. slice (0, userNames.length - 1, userNames))
+            + _.join (", ") (_.slice (0, userNames.length - 1, userNames))
             + " and " +_.last (userNames) + "!";
     }
 }

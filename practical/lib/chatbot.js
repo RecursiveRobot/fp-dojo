@@ -18,7 +18,7 @@ var _ = require ('ramda');
  * [{'Type': 'Greeting', 'Values':
  *      [{'Type': 'Keyword', 'Value': 'Hi'},
  *       {'Type': 'Object', 'Value': 'Edward'},
- *       {'Type': 'Terminal', 'Value': '.'}]}..]
+ *       {'Type': 'Terminal', 'Value': '.'}]}]
  *
  * The UnderstoodMessage above consists of a single ComplexObject
  * which as it's values has three SimpleObjects.
@@ -60,6 +60,9 @@ function reply (message) {
  *  - userNames = ['Bob', 'Fred', 'Alice', 'Frank', 'Mary']
  *  - returns "Hello everyone!"
  *  - Note: Any number of users >= 5 produces the same result
+ * e.g. 5
+ *  - userNames = ['Bob']
+ *  - rettruns "Hello Bob!"
  */
 function initialGreeting (userNames) {
     return "";
@@ -71,7 +74,7 @@ function initialGreeting (userNames) {
  * Hint: use composition, and look at type signatures.
  */
 function parse (messageText) {
-    return {};
+    return [];
 }
 
 /* String -> [String]
