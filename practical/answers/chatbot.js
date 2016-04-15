@@ -26,13 +26,13 @@ var _ = require ('ramda');
  * The types which our tree can hold are listed as follows:
  */
 // These objects are complex and therefore have 'Values';
-var GREETING = 'Greeting';
+var GREETING  = 'Greeting';
 var STATEMENT = 'Statement';
-var QUESTION = 'Question';
+var QUESTION  = 'Question';
 
 // These objects are simple and therefore have a 'Value';
-var KEYWORD = 'Keyword';
-var OBJECT = 'Object';
+var KEYWORD  = 'Keyword';
+var OBJECT   = 'Object';
 var TERMINAL = 'Terminal';
 
 /* (String, ComplexObject) -> String
@@ -46,7 +46,7 @@ var respond = _.curry (function (reply, value) {
     } else if (value.Type == STATEMENT) {
         return reply + evaluateStatement (value);
     } else if (value.Type == QUESTION) {
-        return reply + evaluateQuestion ();
+        return reply + evaluateQuestion (value);
     } else {
         return reply;
     }
@@ -77,7 +77,7 @@ var regexReplace = _.curry (function (pattern, replaceWith, x) {
     return x.replace (pattern, replaceWith);
 });
 
-var tokenise = _.compose (_.split (' '), regexReplace (/ +/g, " "), regexReplace (/([.!?])/g, " $1 "), regexReplace (/[^a-zA-Z.!? ]/g, ""));
+var tokenise = _.compose (_.filter (_.compose (_.not, _.equals (""))), _.split (' '), regexReplace (/ +/g, " "), regexReplace (/([.!?])/g, " $1 "), regexReplace (/[^a-zA-Z.!? ]/g, ""));
 
 /* [String] -> [ComplexObject]
  *
@@ -137,9 +137,8 @@ function initialGreeting (userNames) {
         return "Hello everyone!";
     } else {
         return "Hello "
-            + _.compose (_.join (","),
-                         _.slice (0, userNames.length - 1, userNames))
-            + " and " +_.tail (userNames) + "!";
+            + _.join (", ") (_. slice (0, userNames.length - 1, userNames))
+            + " and " +_.last (userNames) + "!";
     }
 }
 
@@ -176,18 +175,17 @@ function parseTerminated (type, keywords) {
     return function (tokens) {
         if (Util.isOneOfIgnoreCase (keywords) (_.head (tokens))) {
             var split = splitAtOneOfIgnoringCase (TERMINAL_KEYWORDS) (tokens);
-            var splitWithTerminal = [_.append (split[1][0], split[0]), _.slice (1, split[1].length - 1, split[1])];
+            var splitWithTerminal = [_.append (split[1][0], split[0]), _.slice (1, split[1].length, split[1])];
             if (Util.isOneOfIgnoreCase (TERMINAL_KEYWORDS) (_.last (splitWithTerminal[0]))) {
                 return {'Remaining': splitWithTerminal[1],
                         'Parsed': {'Type': type,
                                    'Values':
-                                   [{'Type': KEYWORD,
-                                     'Values': [splitWithTerminal[0][0]]}]
-                                   + _.map (function (token) {return {'Type': OBJECT,
-                                                                      'Value': [token]};},
-                                            _.slice (1, splitWithTerminal[0].length - 1, splitWithTerminal[0]))
-                                   + {'Type': TERMINAL,
-                                      'Values': _.last (splitWithTerminal [0])}}};
+                                   _.concat ([{'Type': KEYWORD,
+                                               'Value': splitWithTerminal[0][0]}]) (_.concat (_.map (function (token) {return {'Type': OBJECT,
+                                                                                                                               'Value': token};},
+                                                                                                     _.slice (1, splitWithTerminal[0].length - 1, splitWithTerminal[0])))
+                                                                                    ([{'Type': TERMINAL,
+                                                                                       'Value': _.last (splitWithTerminal [0])}]))}};
             }
         }
         return {'Remaining': tokens,
@@ -226,7 +224,8 @@ var parseGreeting  = parseTerminated (GREETING, GREETING_START_KEYWORDS);
 /* [String] -> {'Remaining': [String], 'Parsed': [ComplexObject]}
  *
  * Rule: A statement is a series of non-keyword tokens which are
- * terminated but don't start with a keyword.
+ * terminated but don't start with a keyword in
+ * particular. i.e. questions and greetings can be statements.
  *
  * e.g. ['This', 'is', 'a', 'statement', '.']
  *       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -236,16 +235,16 @@ var parseGreeting  = parseTerminated (GREETING, GREETING_START_KEYWORDS);
  */
 function parseStatement (tokens) {
     var split = splitAtOneOfIgnoringCase (TERMINAL_KEYWORDS) (tokens);
-    var splitWithTerminal = [_.append (split[1][0], split[0]), _.slice (1, split[1].length - 1, split[1])];
+    var splitWithTerminal = [_.append (split[1][0], split[0]), _.slice (1, split[1].length, split[1])];
     if (Util.isOneOfIgnoreCase (TERMINAL_KEYWORDS) (_.last (splitWithTerminal[0]))) {
         return {'Remaining': splitWithTerminal[1],
                 'Parsed': {'Type': STATEMENT,
                            'Values':
-                           _.map (function (token) {return {'Type': OBJECT,
-                                                            'Value': [token]};},
-                                  _.slice (0, splitWithTerminal[0].length - 1, splitWithTerminal[0]))
-                           + {'Type': TERMINAL,
-                              'Values': _.last (splitWithTerminal [0])}}};
+                           _.concat (_.map (function (token) {return {'Type': OBJECT,
+                                                                      'Value': token};},
+                                            _.slice (0, splitWithTerminal[0].length - 1,
+                                                     splitWithTerminal[0]))) ([{'Type': TERMINAL,
+                                                                                'Value': _.last (splitWithTerminal [0])}])}};
     }
     return {'Remaining': tokens,
             'Parsed': undefined};
@@ -287,4 +286,12 @@ function evaluateQuestion (question) {
 module.exports = {initialGreeting: initialGreeting,
                   tokenise: tokenise,
                   parseGreeting: parseGreeting,
-                  reply: reply};
+                  parseQuestion: parseQuestion,
+                  parseStatement: parseStatement,
+                  reply: reply,
+                  GREETING: GREETING,
+                  STATEMENT: STATEMENT,
+                  QUESTION: QUESTION,
+                  KEYWORD: KEYWORD,
+                  OBJECT: OBJECT,
+                  TERMINAL: TERMINAL};

@@ -120,6 +120,40 @@ function parseTokens (tokens) {
 var TERMINAL_KEYWORDS = ['.', '!', '?'];
 var QUESTION_START_KEYWORDS = ['How', 'Where', 'What', 'Why', 'Is'];
 
+/* [String] -> [String] -> [[String], [String]]
+ * Split the given expression at the first instance of a keyword equal
+ * to keywords ignoring case.
+ */
+function splitAtOneOfIgnoringCase (keywords) {
+    return _.splitWhen (Util.isOneOfIgnoreCase (keywords));
+}
+
+/* String -> [String] -> [String] -> {'Remaining': [String], 'Parsed': ComplexObject}
+ * Parse a statement of type, type matching a keyword from keywords
+ * and ending with a TERMINAL keyword.
+ */
+function parseTerminated (type, keywords) {
+    return function (tokens) {
+        if (Util.isOneOfIgnoreCase (keywords) (_.head (tokens))) {
+            var split = splitAtOneOfIgnoringCase (TERMINAL_KEYWORDS) (tokens);
+            var splitWithTerminal = [_.append (split[1][0], split[0]), _.slice (1, split[1].length, split[1])];
+            if (Util.isOneOfIgnoreCase (TERMINAL_KEYWORDS) (_.last (splitWithTerminal[0]))) {
+                return {'Remaining': splitWithTerminal[1],
+                        'Parsed': {'Type': type,
+                                   'Values':
+                                   _.concat ([{'Type': KEYWORD,
+                                               'Value': splitWithTerminal[0][0]}]) (_.concat (_.map (function (token) {return {'Type': OBJECT,
+                                                                                                                               'Value': token};},
+                                                                                                     _.slice (1, splitWithTerminal[0].length - 1, splitWithTerminal[0])))
+                                                                                    ([{'Type': TERMINAL,
+                                                                                       'Value': _.last (splitWithTerminal [0])}]))}};
+            }
+        }
+        return {'Remaining': tokens,
+                'Parsed': undefined};
+    };
+}
+
 /* [String] -> {'Remaining': [String], 'Parsed': ComplexObject}
  *
  * Rule: A question is a series of tokens terminated by a terminator
@@ -131,25 +165,7 @@ var QUESTION_START_KEYWORDS = ['How', 'Where', 'What', 'Why', 'Is'];
  *
  * This one is given :)
  */
-function parseQuestion (tokens) {
-    if (Util.isOneOfIgnoreCase (QUESTION_START_KEYWORDS) (_.head (tokens))) {
-        var split = _.splitWhen (_.compose (_.not, Util.isOneOfIgnoreCase (TERMINAL_KEYWORDS)), tokens);
-        if (Util.isOneOfIgnoreCase (TERMINAL_KEYWORDS) (_.last (split[0]))) {
-            return {'Remaining': split[1],
-                    'Parsed': {'Type': QUESTION,
-                               'Values':
-                               [{'Type': KEYWORD,
-                                 'Values': [split[0][0]]}]
-                               + _.map (function (token) {return {'Type': OBJECT,
-                                                                  'Value': [token]};},
-                                        _.slice (1, split[0].length - 1, split[0]))
-                               + {'Type': TERMINAL,
-                                  'Values': _.last (split [0])}}};
-        }
-    }
-    return {'Remaining': tokens,
-            'Parsed': undefined};
-}
+var parseQuestion = parseTerminated (QUESTION, QUESTION_START_KEYWORDS);
 
 var GREETING_KEYWORDS = ['Hi', 'Hello', 'Howzit', 'Hey'];
 
