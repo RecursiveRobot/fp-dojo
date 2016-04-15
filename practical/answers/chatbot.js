@@ -135,6 +135,8 @@ function initialGreeting (userNames) {
         return "Hello, anyone there?";
     } else if (userNames.length >= 5) {
         return "Hello everyone!";
+    } else if (userNames.length == 1) {
+        return "Hello " + _.head (userNames) + "!";
     } else {
         return "Hello "
             + _.join (", ") (_. slice (0, userNames.length - 1, userNames))
