@@ -359,7 +359,7 @@ var c = add(1, 2);
 					<h3>Addition</h3>
 					<pre><code class="hljs" data-trim contenteditable>
 // Curried...
-function addCurried(a, b) {
+function addCurried(a) {
     return function(b) {
         return a + b;
     }
@@ -453,7 +453,6 @@ var f = curriedAddition(1)(2)(5)(3)(4);
                     <script type="text/template">
                         ### Exercises
                         ---
-                        * **Navigate to** `lessons`
                         * **Run** `npm install`
                         * **Navigate to** `lessons\exercises\curry`
                         * **Complete an exercise in** `curry.js`
@@ -603,7 +602,7 @@ initials("hunter stockton thompson");
                     <script type="text/template">
                         ### Pro's and Con's
                         
-                        * No need to name input paramters
+                        * No need to name input paramaters
                         * Less readable in some instances
                         
                     </script>
