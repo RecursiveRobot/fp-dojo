@@ -8,7 +8,8 @@
 #+HTML_LINK_HOME:
 #+HTML_LINK_UP:
 #+HTML_MATHJAX:
-#+HTML_HEAD:
+#+HTML_HEAD: <link rel="stylesheet" href="css/bootstrap-3.3.6-dist/css/bootstrap.css" id="theme">
+#+HTML_HEAD: <link rel="stylesheet" href="css/root.css" id="theme">
 #+HTML_HEAD_EXTRA:
 #+SUBTITLE:
 #+INFOJS_OPT:
@@ -20,7 +21,6 @@
 #+STARTUP: showall
 
 * Introduction
-
 In this practical we'll write a slack bot in JavaScript using the
 Ramda library and some helper libraries to keep things as functional
 as possible.
@@ -30,27 +30,105 @@ What will our bot be able to do?
 Nothing too special. At first he will echo back at you using
 /dangerous/ side effects (!?) When we are done he will give the
 appearance of understanding some very basic conversation queues (this
-is the main part which we'll be interested in).
+is the main part which we'll be interested in.)
 
 * But _Side Effects_!?
-
 Side effects, as we discovered in the first part of this dojo, are
 impure. However, any useful program must make use of side effects to
 interact with the world outside of a computer -- how useful is it to
-run a program which adds two numbers and doesn't communicate anything
-about it?
+run a program which adds two numbers and doesn't communicate the
+result?
 
 The topic of dealing with side effects is outside of the scope of this
 dojo, so what we've done is provide you with a harness which will
 allow you to simply plonk your nice pure function in (String -> String
--> String) and behold as our slack bot comes to life!!!
+-> String) and behold as our chat bot comes to life!!!
 
 * What We Wont Explicitly Cover
-
  - Setting up a slack bot integration token etc.
    (You can find steps to do this in the appendix)
  - Running your slack bot on a web server.
    (Nothing special here -- just find a server :P )
+ - If you're doing this practical in the dojo then we won't be running
+   the chat bot slack integration, but instead use the CLI based
+   client
 
 * Getting Started
+In order to keep things moving we won't be expecting you to provide
+the full implementation of the chat bot. If you take a look at the
+code you'll find that the implementation of the bot is largely given
+and it'll be your job to fill in the gaps.
 
+** Exercises
+All exercises will begin with a comment stating what part of the
+practical the exercise is.
+
+#+BEGIN_SRC javascript
+// EX: Part 1
+#+END_SRC
+
+This comment indicates that the exercise is part 1 of the
+practical. If you're doing this practical in the dojo then feel free
+to run it at your own pace. Just remember to skip to the correct part
+of the practical each time.
+
+** Completing the Code
+Throughout this practical the places with code which you're expected
+to correct/fill in are marked by obvious syntactical errors. For
+example the code in the following snippets has a series of three
+question marks which indicate that you ought to replace them with the
+code which ought to be in their place.
+
+#+BEGIN_SRC javascript
+  var _ = require ('ramda');
+
+  function capitalizeFirstChar (x) {
+      return x.charAt (0).toUpperCase () + x.slice (1);
+  } 
+
+  var capitalizeFirst =
+      _.compose (???, _.head);
+#+END_SRC
+
+In the first snippet you're expected to supply the function which
+completes the composition so that the first string of the given list
+is returned, capitalised.
+
+#+BEGIN_SRC javascript
+  var _ = require ('ramda');
+
+  function respondToGreeting (greetingMessage) {
+      if (greetingMessage == "Hello") {
+          return "Blah";
+      } else if (greetingMessage == ???) {
+              ???
+      }
+      return "Unmatched";
+  }
+#+END_SRC
+
+The second snippet is similar to the first but expects you to fill in
+the string to match and the implementation of that block should the
+greeting string match.
+
+* Conclusion
+This brief practical has given you a brief taster of the world of
+functional programming. In it we saw how a program is easy to design
+and reason about in clear terms when we keep everything pure. We also
+saw how code turns out very compact and easy to maintain when we
+program in a functional style.
+
+This is only the beginning! We glossed over the details regarding the
+use of side effects in our programs. That topic requires that we dive
+into the strange world of category theory and the mechanisms which
+functional programming has borrowed from the arcane archives of
+mathematics!
+
+If you are interested in learning more then the book "The Mostly
+Adequate Guide to Functional Programming" comes highly recommended. If
+you can't face the idea of taking this bull by it's horns without the
+guidance of an experienced sensei, then do not fear! We'll probably be
+back in the future with another dojo covering some of the more
+advanced topics in functional programming including the use of monads,
+functors and IO. Who knows, we might even throw in some web services
+and databases (!!!)

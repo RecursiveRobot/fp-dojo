@@ -1,7 +1,7 @@
 var Util = require ('../lib/util');
 var _ = require ('ramda');
 
-/* The slack bot we'll write will only understand bot-lang: a very
+/* The chat bot we'll write will only understand bot-lang: a very
  * strict and highly simplified version of English. The core of
  * bot-lang is UnderstoodMessage.
  */

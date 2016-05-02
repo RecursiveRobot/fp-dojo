@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2016-04-14 Thu 17:44 -->
+<!-- 2016-05-02 Mon 10:18 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="viewport" content="width=device-width, initial-scale=1" />
 <title>Functional Slack Bot in Javascript</title>
@@ -94,6 +94,8 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
+<link rel="stylesheet" href="css/bootstrap-3.3.6-dist/css/bootstrap.css" id="theme">
+<link rel="stylesheet" href="css/root.css" id="theme">
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -151,7 +153,13 @@ for the JavaScript code in this tag.
 <li><a href="#orgheadline1">1. Introduction</a></li>
 <li><a href="#orgheadline2">2. But <span class="underline">Side Effects</span>!?</a></li>
 <li><a href="#orgheadline3">3. What We Wont Explicitly Cover</a></li>
-<li><a href="#orgheadline4">4. Getting Started</a></li>
+<li><a href="#orgheadline6">4. Getting Started</a>
+<ul>
+<li><a href="#orgheadline4">4.1. Exercises</a></li>
+<li><a href="#orgheadline5">4.2. Completing the Code</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline7">5. Conclusion</a></li>
 </ul>
 </div>
 </div>
@@ -173,7 +181,7 @@ What will our bot be able to do?
 Nothing too special. At first he will echo back at you using
 <i>dangerous</i> side effects (!?) When we are done he will give the
 appearance of understanding some very basic conversation queues (this
-is the main part which we'll be interested in).
+is the main part which we'll be interested in.)
 </p>
 </div>
 </div>
@@ -185,15 +193,15 @@ is the main part which we'll be interested in).
 Side effects, as we discovered in the first part of this dojo, are
 impure. However, any useful program must make use of side effects to
 interact with the world outside of a computer &#x2013; how useful is it to
-run a program which adds two numbers and doesn't communicate anything
-about it?
+run a program which adds two numbers and doesn't communicate the
+result?
 </p>
 
 <p>
 The topic of dealing with side effects is outside of the scope of this
 dojo, so what we've done is provide you with a harness which will
 allow you to simply plonk your nice pure function in (String -&gt; String
--&gt; String) and behold as our slack bot comes to life!!!
+-&gt; String) and behold as our chat bot comes to life!!!
 </p>
 </div>
 </div>
@@ -206,18 +214,137 @@ allow you to simply plonk your nice pure function in (String -&gt; String
 (You can find steps to do this in the appendix)</li>
 <li>Running your slack bot on a web server.
 (Nothing special here &#x2013; just find a server :P )</li>
+<li>If you're doing this practical in the dojo then we won't be running
+the chat bot slack integration, but instead use the CLI based
+client</li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgheadline4" class="outline-2">
-<h2 id="orgheadline4"><span class="section-number-2">4</span> Getting Started</h2>
+<div id="outline-container-orgheadline6" class="outline-2">
+<h2 id="orgheadline6"><span class="section-number-2">4</span> Getting Started</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+In order to keep things moving we won't be expecting you to provide
+the full implementation of the chat bot. If you take a look at the
+code you'll find that the implementation of the bot is largely given
+and it'll be your job to fill in the gaps.
+</p>
+</div>
+
+<div id="outline-container-orgheadline4" class="outline-3">
+<h3 id="orgheadline4"><span class="section-number-3">4.1</span> Exercises</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+All exercises will begin with a comment stating what part of the
+practical the exercise is.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-javascript">// EX: Part 1
+</pre>
+</div>
+
+<p>
+This comment indicates that the exercise is part 1 of the
+practical. If you're doing this practical in the dojo then feel free
+to run it at your own pace. Just remember to skip to the correct part
+of the practical each time.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline5" class="outline-3">
+<h3 id="orgheadline5"><span class="section-number-3">4.2</span> Completing the Code</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Throughout this practical the places with code which you're expected
+to correct/fill in are marked by obvious syntactical errors. For
+example the code in the following snippets has a series of three
+question marks which indicate that you ought to replace them with the
+code which ought to be in their place.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-javascript">var _ = require ('ramda');
+
+function capitalizeFirstChar (x) {
+    return x.charAt (0).toUpperCase () + x.slice (1);
+} 
+
+var capitalizeFirst =
+    _.compose (???, _.head);
+</pre>
+</div>
+
+<p>
+In the first snippet you're expected to supply the function which
+completes the composition so that the first string of the given list
+is returned, capitalised.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-javascript">var _ = require ('ramda');
+
+function respondToGreeting (greetingMessage) {
+    if (greetingMessage == "Hello") {
+        return "Blah";
+    } else if (greetingMessage == ???) {
+            ???
+    }
+    return "Unmatched";
+}
+</pre>
+</div>
+
+<p>
+The second snippet is similar to the first but expects you to fill in
+the string to match and the implementation of that block should the
+greeting string match.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline7" class="outline-2">
+<h2 id="orgheadline7"><span class="section-number-2">5</span> Conclusion</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+This brief practical has given you a brief taster of the world of
+functional programming. In it we saw how a program is easy to design
+and reason about in clear terms when we keep everything pure. We also
+saw how code turns out very compact and easy to maintain when we
+program in a functional style.
+</p>
+
+<p>
+This is only the beginning! We glossed over the details regarding the
+use of side effects in our programs. That topic requires that we dive
+into the strange world of category theory and the mechanisms which
+functional programming has borrowed from the arcane archives of
+mathematics!
+</p>
+
+<p>
+If you are interested in learning more then the book "The Mostly
+Adequate Guide to Functional Programming" comes highly recommended. If
+you can't face the idea of taking this bull by it's horns without the
+guidance of an experienced sensei, then do not fear! We'll probably be
+back in the future with another dojo covering some of the more
+advanced topics in functional programming including the use of monads,
+functors and IO. Who knows, we might even throw in some web services
+and databases (!!!)
+</p>
+</div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: 13/04/2016</p>
 <p class="author">Author: Edward John Steere</p>
-<p class="date">Created: 2016-04-14 Thu 17:44</p>
+<p class="date">Created: 2016-05-02 Mon 10:18</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
