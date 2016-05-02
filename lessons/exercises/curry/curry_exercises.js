@@ -1,14 +1,18 @@
 require('../../support');
 var _ = require('ramda');
 
+// Note: we've provided some starting points to make things easier.
+// Replace the question marks with code to implement the function.
 
 // Exercise 1
 //==============
 // Refactor to remove all arguments by partially applying the function
 
 var words = function(str) {
-  return split(' ', str);
+    return split(' ', str);
 };
+
+// Starting point: var words = split (???)
 
 // Exercise 1a
 //==============
@@ -16,15 +20,17 @@ var words = function(str) {
 
 var sentences = undefined;
 
+// Starting point: var sentences = _.map (???)
 
 // Exercise 2
 //==============
 // Refactor to remove all arguments by partially applying the functions
 
 var filterQs = function(xs) {
-  return filter(function(x){ return match(/q/i, x);  }, xs);
+    return filter(function(x){ return match(/q/i, x);  }, xs);
 };
 
+// Starting point: var filterQs = ??? (??? (???))
 
 // Exercise 3
 //==============
@@ -35,9 +41,9 @@ var _keepHighest = function(x,y){ return x >= y ? x : y; };
 
 // REFACTOR THIS ONE:
 var max = function(xs) {
-  return reduce(function(acc, x){
-    return _keepHighest(acc, x);
-  }, 0, xs);
+    return reduce(function(acc, x){
+        return _keepHighest(acc, x);
+    }, 0, xs);
 };
 
   
