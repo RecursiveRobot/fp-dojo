@@ -122,13 +122,11 @@ var tokenise = _.compose (_.filter (_.compose (_.not, _.equals (""))),
  */
 function parseTokens (tokens) {
     var firstDefined = _.compose (_.head, _.dropWhile (_.compose (_.equals (undefined), _.prop ('Parsed'))));
-    var parsed = firstDefined ([parseQuestion (tokens),
-                                parseGreeting (tokens),
-                                parseStatement (tokens)]);
+    var parsed = firstDefined ([???...]);
     if (parsed == undefined) {
-        return [];
+            ???;
     }
-    return _.concat ([parsed.Parsed], parseTokens (parsed.Remaining));
+    return _.concat ([parsed.Parsed], parseTokens (???));
 }
 
 /* String -> [ComplexObject]
@@ -193,12 +191,45 @@ function initialGreeting (userNames) {
 var TERMINAL_KEYWORDS = ['.', '!', '?'];
 var QUESTION_START_KEYWORDS = ['How', 'Where', 'What', 'Why', 'Is'];
 
-/* [String] -> [String] -> [[String], [String]]
- * Split the given expression at the first instance of a keyword equal
- * to keywords ignoring case.
+/* [String] -> String -> [String]
+ * Split the given string list at the first occurance of the given
+ * token and keep the token which was split on.
  */
-function splitAtOneOfIgnoringCase (keywords) {
-    return _.splitWhen (Util.isOneOfIgnoreCase (keywords));
+function splitUpToTerminal (xs) {
+    var split = _.splitWhen (Util.isOneOfIgnoreCase (TERMINAL_KEYWORDS), xs);
+    return [_.append (split[1][0], split[0]), _.slice (1, split[1].length, split[1])];
+}
+
+/* [String] -> [String]
+ * Produce the given list without the last element.
+ */
+function sliceAllButLast (xs) {
+    return _.slice (1, xs[0].length - 1, xs[0]);
+}
+
+/* String -> Object
+ * Produce an object simple type type from the given string for the
+ * object value.
+ */
+function constructObject (value) {
+    return {'Type': OBJECT,
+            'Value': value};
+}
+
+/* [String] -> ComplexObject
+ * Construct a complex object from the tokens which comprise it.
+ */
+function constructComplexObject (tokens, type) {
+    var keyword  = tokens[0];
+    var objects  = _.map (constructObject, sliceAllButLast (tokens));
+    var terminal = tokens[tokens.length - 1];
+    return {'Type': type,
+            'Values':
+            _.concat ([{'Type': KEYWORD,
+                        'Value': keyword}],
+                      objects,
+                      [{'Type': TERMINAL,
+                        'Value': terminal}])};
 }
 
 /* String -> [String] -> [String] -> {'Remaining': [String], 'Parsed': ComplexObject}
@@ -208,22 +239,16 @@ function splitAtOneOfIgnoringCase (keywords) {
 function parseTerminated (type, keywords) {
     return function (tokens) {
         if (Util.isOneOfIgnoreCase (keywords) (_.head (tokens))) {
-            var split = splitAtOneOfIgnoringCase (TERMINAL_KEYWORDS) (tokens);
-            var splitWithTerminal = [_.append (split[1][0], split[0]), _.slice (1, split[1].length, split[1])];
-            if (Util.isOneOfIgnoreCase (TERMINAL_KEYWORDS) (_.last (splitWithTerminal[0]))) {
-                return {'Remaining': splitWithTerminal[1],
-                        'Parsed': {'Type': type,
-                                   'Values':
-                                   _.concat ([{'Type': KEYWORD,
-                                               'Value': splitWithTerminal[0][0]}]) (_.concat (_.map (function (token) {return {'Type': OBJECT,
-                                                                                                                               'Value': token};},
-                                                                                                     _.slice (1, splitWithTerminal[0].length - 1, splitWithTerminal[0])))
-                                                                                    ([{'Type': TERMINAL,
-                                                                                       'Value': _.last (splitWithTerminal [0])}]))}};
+            var splittedUpToTerminal = splitUpToTerminal (tokens);
+            var tokensUpToTerminal   = splittedUpToTerminal[0];
+            if (Util.isOneOfIgnoreCase (TERMINAL_KEYWORDS, _.last (tokensUpToTerminal[0]))) {
+                return {'Remaining': splittedUpToTerminal[1],
+                        'Parsed': constructComplexObject (tokensUpToTerminal, type)};
             }
-        }
+        };
         return {'Remaining': tokens,
                 'Parsed': undefined};
+
     };
 }
 
