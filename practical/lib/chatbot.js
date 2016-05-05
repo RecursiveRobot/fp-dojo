@@ -248,7 +248,6 @@ function parseTerminated (type, keywords) {
         };
         return {'Remaining': tokens,
                 'Parsed': undefined};
-
     };
 }
 
@@ -293,21 +292,15 @@ var parseGreeting  = parseTerminated (GREETING, GREETING_START_KEYWORDS);
  * Part Five
  */
 function parseStatement (tokens) {
-    var split = splitAtOneOfIgnoringCase (TERMINAL_KEYWORDS) (tokens);
-    var splitWithTerminal = [_.append (split[1][0], split[0]), _.slice (1, split[1].length, split[1])];
-    if (Util.isOneOfIgnoreCase (TERMINAL_KEYWORDS) (_.last (splitWithTerminal[0]))) {
-        return {'Remaining': splitWithTerminal[1],
-                'Parsed': {'Type': STATEMENT,
-                           'Values':
-                           _.concat (_.map (function (token) {return {'Type': OBJECT,
-                                                                      'Value': token};},
-                                            _.slice (0, splitWithTerminal[0].length - 1,
-                                                     splitWithTerminal[0]))) ([{'Type': TERMINAL,
-                                                                                'Value': _.last (splitWithTerminal [0])}])}};
+    var splittedUpToTerminal = splitUpToTerminal (tokens);
+    var tokensUpToTerminal   = splittedUpToTerminal[0];
+    if (Util.isOneOfIgnoreCase (TERMINAL_KEYWORDS, _.last (tokensUpToTerminal[0]))) {
+        return {'Remaining': splittedUpToTerminal[1],
+                'Parsed': constructComplexObject (tokensUpToTerminal, STATEMENT)};
     }
     return {'Remaining': tokens,
             'Parsed': undefined};
-}
+};
 
 /* Keep in mind that the following three functions should be pure.  It
  * limits your options (because we haven't accounted for 'state') but
