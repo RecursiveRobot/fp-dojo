@@ -7,12 +7,13 @@ var _ = require('ramda');
 // Exercise 1
 //==============
 // Refactor to remove all arguments by partially applying the function
+// i.e. never use the keyword 'function'
+// Note that the function _.split and many others in this exercise,
+// are curried.
 
 var words = function(str) {
-    return split(' ', str);
-};
-
-// Starting point: var words = split (???)
+    return _.split(' ', str);
+}; // Starting point: var words = _.split (???)
 
 // Exercise 1a
 //==============
