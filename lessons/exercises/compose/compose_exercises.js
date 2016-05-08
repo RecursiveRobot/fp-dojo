@@ -18,6 +18,11 @@ var CARS = [
 // Exercise 1:
 // ============
 // use _.compose() to rewrite the function below. Hint: _.prop() is curried.
+
+// NOTE: _.prop is a function which takes the name of a property on an
+// object and an object and returns the property of the object by that
+// name.
+// i.e. prop :: String -> Object -> a
 var isLastInStock = function(cars) {
     var reversed_cars = _.last(cars);
     return _.prop('in_stock', reversed_cars);
@@ -48,6 +53,12 @@ var averageDollarValue = function(cars) {
 // Exercise 4:
 // ============
 // Write a function: sanitizeNames() using compose that takes an array of cars and returns a list of lowercase and underscored names: e.g: sanitizeNames([{name: "Ferrari FF"}]) //=> ["ferrari_ff"].
+//
+// NOTE: Ramda includes a function called 'toLower' which might be
+// helpful here.
+//
+// You can get to the ramda documentation here:
+// http://ramdajs.com/0.20.1/docs (latest at time of writing this)
 
 var _underscore = replace(/\W+/g, '_'); //<-- leave this alone and use to sanitize
 
