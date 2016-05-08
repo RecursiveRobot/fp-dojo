@@ -167,6 +167,5 @@ know so that we can gauge the level of interest.
 TODO
 ----
 
-* TODO Refactor the practical so that it's shorter
 * TODO Finish the instructions on hooking up with slack
 * TODO Make testing more thorough

@@ -36,12 +36,12 @@ var _ = require ('ramda');
  *
  * The types which our tree can hold are listed as follows:
  */
-// These objects are complex and therefore have 'Values';
+// These objects are complex and therefore have 'Values'
 var GREETING  = 'Greeting';
 var STATEMENT = 'Statement';
 var QUESTION  = 'Question';
 
-// These objects are simple and therefore have a 'Value';
+// These objects are simple and therefore have a 'Value'
 var KEYWORD  = 'Keyword';
 var OBJECT   = 'Object';
 var TERMINAL = 'Terminal';
@@ -73,6 +73,43 @@ var respond = _.curry (function (reply, value) {
  */
 var evaluate = _.reduce (respond, "");
 
+// Some useful regular expressions:
+var MATCH_WHITESPACE             = / +/g;
+var MATCH_PUNCTUATION            = /([.!?])/g;
+var MATCH_NON_ACCEPTED_CHARACTER = /[^a-zA-Z.!? ]/g;
+
+/* String -> String
+ * Produce a new string from the given string in which the punctuation
+ * will always be surrounded by whitespace.
+ */
+var splitOutPunctuation = function (toSplit) {
+    return ???;
+};
+
+/* String -> String
+ * Produce a new string from the given string with non alpha
+ * numeric/puncation charecters present.
+ */
+var filterNonAcceptedCharacters = function (toFilter) {
+    return regexReplace (MATCH_NON_ACCEPTED_CHARACTER, '');
+};
+
+/* String -> String
+ * Produce a new string from the given string in which there are no
+ * successive white spaces.
+ */
+var collapseSuccessiveWhitespaces = function (toFilter) {
+    return ???;
+};
+
+/* RegEx -> String -> String -> String -> String
+ * Replace the given regular expressing with the given replacement
+ * string in the given string.
+ */
+var regexReplace = _.curry (function (pattern, replaceWith, x) {
+    return x.replace (pattern, replaceWith);
+});
+
 /* String -> [String]
  *
  * Rules:
@@ -84,27 +121,6 @@ var evaluate = _.reduce (respond, "");
  *
  * Part Three: implement tokenize
  */
-// Some useful regular expressions:
-var MATCH_WHITESPACE             = / +/g;
-var MATCH_PUNCTUATION            = /([.!?])/g;
-var MATCH_NON_ACCEPTED_CHARACTER = /[^a-zA-Z.!? ]/g;
-
-var splitOutPunctuation = function (toSplit) {
-    return ???;
-};
-
-var filterNonAcceptedCharacters = function (toFilter) {
-    return regexReplace (MATCH_NON_ACCEPTED_CHARACTERS, '');
-};
-
-var collapseSuccessiveWhitespaces = function (toFilter) {
-    return ???;
-};
-
-var regexReplace = _.curry (function (pattern, replaceWith, x) {
-    return x.replace (pattern, replaceWith);
-});
-
 var tokenise = _.compose (_.filter (_.compose (_.not, _.equals (""))),
                           _.split (' '),
                           collapseSuccessiveWhitespaces,
@@ -187,11 +203,10 @@ function initialGreeting (userNames) {
  * [ComplexObject] and 'Remaining' should have tokens removed
  * corresponding to what was parsed.
  */
-
 var TERMINAL_KEYWORDS = ['.', '!', '?'];
 var QUESTION_START_KEYWORDS = ['How', 'Where', 'What', 'Why', 'Is'];
 
-/* [String] -> String -> [String]
+/* [String] -> String -> [[String], [String]]
  * Split the given string list at the first occurance of the given
  * token and keep the token which was split on.
  */

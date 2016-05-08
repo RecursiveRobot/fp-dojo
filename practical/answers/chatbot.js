@@ -1,5 +1,16 @@
-var Util = require ('../lib/util');
-var _ = require ('ramda');
+var _    = require ('ramda');
+var Util = require ('util');
+
+/* NOTE:
+ * The exercises appear out of order in this file.
+ * To begin, search for the comment 'Part one'
+ * To continue with the practical simply search for 'Part two' etc.
+ */
+
+/* NOTE: (as with the exercises)
+ * We've provided some starting points to make things easier.
+ * Replace the question marks with code to implement the function.
+ */
 
 /* The chat bot we'll write will only understand bot-lang: a very
  * strict and highly simplified version of English. The core of
@@ -62,6 +73,48 @@ var respond = _.curry (function (reply, value) {
  */
 var evaluate = _.reduce (respond, "");
 
+// Some useful regular expressions:
+var MATCH_WHITESPACE             = / +/g;
+var MATCH_PUNCTUATION            = /([.!?])/g;
+var MATCH_NON_ACCEPTED_CHARACTER = /[^a-zA-Z.!? ]/g;
+
+/* String -> String
+ * Produce a new string from the given string in which the punctuation
+ * will always be surrounded by whitespace.
+ */
+var splitOutPunctuation = function (toSplit) {
+    return regexReplace (MATCH_PUNCTUATION, " $1 ");
+};
+
+/* String -> String
+ * Produce a new string from the given string with non alpha
+ * numeric/puncation charecters present.
+ */
+var filterNonAcceptedCharacters = function (toFilter) {
+    return regexReplace (MATCH_NON_ACCEPTED_CHARACTER, '');
+};
+
+/* String -> String
+ * Produce a new string from the given string in which there are no
+ * successive white spaces.
+ */
+var collapseSuccessiveWhitespaces = function (toFilter) {
+    return regexReplace (MATCH_WHITESPACE, " ");
+};
+
+/* RegEx -> String -> String -> String -> String
+ * Replace the given regular expressing with the given replacement
+ * string in the given string.
+ */
+var regexReplace = _.curry (function (pattern, replaceWith, x) {
+    return x.replace (pattern, replaceWith);
+});
+
+function trace (x) {
+    console.log (x);
+    return x;
+}
+
 /* String -> [String]
  *
  * Rules:
@@ -73,11 +126,12 @@ var evaluate = _.reduce (respond, "");
  *
  * Part Three: implement tokenize
  */
-var regexReplace = _.curry (function (pattern, replaceWith, x) {
-    return x.replace (pattern, replaceWith);
-});
-
-var tokenise = _.compose (_.filter (_.compose (_.not, _.equals (""))), _.split (' '), regexReplace (/ +/g, " "), regexReplace (/([.!?])/g, " $1 "), regexReplace (/[^a-zA-Z.!? ]/g, ""));
+var tokenise = _.compose (_.filter (_.compose (_.not, _.equals (""))),
+                          _.split (' '),
+                          trace,
+                          collapseSuccessiveWhitespaces,
+                          splitOutPunctuation,
+                          filterNonAcceptedCharacters);
 
 /* [String] -> [ComplexObject]
  *
@@ -157,16 +211,48 @@ function initialGreeting (userNames) {
  * [ComplexObject] and 'Remaining' should have tokens removed
  * corresponding to what was parsed.
  */
-
 var TERMINAL_KEYWORDS = ['.', '!', '?'];
 var QUESTION_START_KEYWORDS = ['How', 'Where', 'What', 'Why', 'Is'];
 
-/* [String] -> [String] -> [[String], [String]]
- * Split the given expression at the first instance of a keyword equal
- * to keywords ignoring case.
+/* [String] -> String -> [[String], [String]]
+ * Split the given string list at the first occurance of the given
+ * token and keep the token which was split on.
  */
-function splitAtOneOfIgnoringCase (keywords) {
-    return _.splitWhen (Util.isOneOfIgnoreCase (keywords));
+function splitUpToTerminal (xs) {
+    var split = _.splitWhen (Util.isOneOfIgnoreCase (TERMINAL_KEYWORDS), xs);
+    return [_.append (split[1][0], split[0]), _.slice (1, split[1].length, split[1])];
+}
+
+/* [String] -> [String]
+ * Produce the given list without the last element.
+ */
+function sliceAllButLast (xs) {
+    return _.slice (1, xs[0].length - 1, xs[0]);
+}
+
+/* String -> Object
+ * Produce an object simple type type from the given string for the
+ * object value.
+ */
+function constructObject (value) {
+    return {'Type': OBJECT,
+            'Value': value};
+}
+
+/* [String] -> ComplexObject
+ * Construct a complex object from the tokens which comprise it.
+ */
+function constructComplexObject (tokens, type) {
+    var keyword  = tokens[0];
+    var objects  = _.map (constructObject, sliceAllButLast (tokens));
+    var terminal = tokens[tokens.length - 1];
+    return {'Type': type,
+            'Values':
+            _.concat ([{'Type': KEYWORD,
+                        'Value': keyword}],
+                      objects,
+                      [{'Type': TERMINAL,
+                        'Value': terminal}])};
 }
 
 /* String -> [String] -> [String] -> {'Remaining': [String], 'Parsed': ComplexObject}
@@ -176,20 +262,13 @@ function splitAtOneOfIgnoringCase (keywords) {
 function parseTerminated (type, keywords) {
     return function (tokens) {
         if (Util.isOneOfIgnoreCase (keywords) (_.head (tokens))) {
-            var split = splitAtOneOfIgnoringCase (TERMINAL_KEYWORDS) (tokens);
-            var splitWithTerminal = [_.append (split[1][0], split[0]), _.slice (1, split[1].length, split[1])];
-            if (Util.isOneOfIgnoreCase (TERMINAL_KEYWORDS) (_.last (splitWithTerminal[0]))) {
-                return {'Remaining': splitWithTerminal[1],
-                        'Parsed': {'Type': type,
-                                   'Values':
-                                   _.concat ([{'Type': KEYWORD,
-                                               'Value': splitWithTerminal[0][0]}]) (_.concat (_.map (function (token) {return {'Type': OBJECT,
-                                                                                                                               'Value': token};},
-                                                                                                     _.slice (1, splitWithTerminal[0].length - 1, splitWithTerminal[0])))
-                                                                                    ([{'Type': TERMINAL,
-                                                                                       'Value': _.last (splitWithTerminal [0])}]))}};
+            var splittedUpToTerminal = splitUpToTerminal (tokens);
+            var tokensUpToTerminal   = splittedUpToTerminal[0];
+            if (Util.isOneOfIgnoreCase (TERMINAL_KEYWORDS, _.last (tokensUpToTerminal[0]))) {
+                return {'Remaining': splittedUpToTerminal[1],
+                        'Parsed': constructComplexObject (tokensUpToTerminal, type)};
             }
-        }
+        };
         return {'Remaining': tokens,
                 'Parsed': undefined};
     };
@@ -236,21 +315,15 @@ var parseGreeting  = parseTerminated (GREETING, GREETING_START_KEYWORDS);
  * Part Five
  */
 function parseStatement (tokens) {
-    var split = splitAtOneOfIgnoringCase (TERMINAL_KEYWORDS) (tokens);
-    var splitWithTerminal = [_.append (split[1][0], split[0]), _.slice (1, split[1].length, split[1])];
-    if (Util.isOneOfIgnoreCase (TERMINAL_KEYWORDS) (_.last (splitWithTerminal[0]))) {
-        return {'Remaining': splitWithTerminal[1],
-                'Parsed': {'Type': STATEMENT,
-                           'Values':
-                           _.concat (_.map (function (token) {return {'Type': OBJECT,
-                                                                      'Value': token};},
-                                            _.slice (0, splitWithTerminal[0].length - 1,
-                                                     splitWithTerminal[0]))) ([{'Type': TERMINAL,
-                                                                                'Value': _.last (splitWithTerminal [0])}])}};
+    var splittedUpToTerminal = splitUpToTerminal (tokens);
+    var tokensUpToTerminal   = splittedUpToTerminal[0];
+    if (Util.isOneOfIgnoreCase (TERMINAL_KEYWORDS, _.last (tokensUpToTerminal[0]))) {
+        return {'Remaining': splittedUpToTerminal[1],
+                'Parsed': constructComplexObject (tokensUpToTerminal, STATEMENT)};
     }
     return {'Remaining': tokens,
             'Parsed': undefined};
-}
+};
 
 /* Keep in mind that the following three functions should be pure.  It
  * limits your options (because we haven't accounted for 'state') but

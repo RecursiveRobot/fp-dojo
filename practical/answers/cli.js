@@ -1,5 +1,4 @@
 var ChatBot = require ('./chatbot');
-var util = require ('util');
 
 console.log (ChatBot.initialGreeting ([]));
 
