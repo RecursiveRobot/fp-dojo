@@ -65,6 +65,11 @@ You should see output like the following:
 Theory Overview
 ---------------
 
+This repository comes with the presentation given in the dojo. You can
+use it as a way to do the dojo by yourself if you want to. Just open
+up the index.html file (in the presentation directory) using your
+favourite browser.
+
 * Lesson 1: State and purity
 * Lesson 2: Higher Order Functions
 * Lesson 3: Currying
