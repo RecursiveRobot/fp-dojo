@@ -88,7 +88,7 @@ var splitOutPunctuation = function (toSplit) {
 
 /* String -> String
  * Produce a new string from the given string with non alpha
- * numeric/puncation charecters present.
+ * numeric/puncation characters present.
  */
 var filterNonAcceptedCharacters = function (toFilter) {
     return regexReplace (MATCH_NON_ACCEPTED_CHARACTER, '');
