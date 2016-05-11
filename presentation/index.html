@@ -49,7 +49,7 @@
 
                 <section data-markdown>
                     <script type="text/template">
-                        ## Introduction
+                        ## What is Functional Programming?
 
                         - Paradigm of Programming
                         - Emphasis on Function
@@ -62,8 +62,8 @@
                         ### Paradigm of Programming
 
                         - Models behaviour
-                        - Abstract over complexity
-                        - Generalise (very important in FP!!!)
+                        - Abstracts over complexity
+                        - Generalised (very important in FP!!!)
                     </script>
                 </section>
                 
@@ -79,9 +79,52 @@
                 
                 <section data-markdown>
                     <script type="text/template">
+                        ### What is a function?
+
+                        From [mathisfun.com](http://www.mathsisfun.com/sets/function.html):
+
+                        > A function is a special relationship between values:
+
+                        > Each of its input values gives back exactly one output value.
+
+                    </script>
+                </section>
+
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Function
+
+                        ![Function](images/function-sets.gif "Function")
+
+                        <small>[Source](http://www.mathsisfun.com/sets/function.html)</small>
+                    </script>
+                </section>
+
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Not a Function
+
+                        ![Not a Function](images/relation-not-function.gif "Not a Function")
+
+                        <small>[Source](http://www.mathsisfun.com/sets/function.html)</small>
+                    </script>
+                </section>
+
+                <section data-markdown>
+                    <script type="text/template">
+                        ### Vertical Line Test
+
+                        <img src="images/vertical-line-test.gif" />
+
+                        <small>[Source](http://www.mathsisfun.com/sets/function.html)</small>
+                    </script>
+                </section>
+                
+                <section data-markdown>
+                    <script type="text/template">
                         ### Strong Mathematical Influence
 
-                        - Equality instead of asignment
+                        - Equality instead of assignment
                         <pre><code class="hljs" data-trim contenteditable data-noescape>
 f(x) = x + 2
                         </code></pre>
@@ -210,49 +253,6 @@ var squareRoot = function(value) {
   return Math.sqrt(value);
 };
                     </code></pre>
-                </section>
-
-                <section data-markdown>
-                    <script type="text/template">
-                        ### What is a function anyway?
-
-                        From mathisfun.com:
-
-                        > A function is a special relationship between values:
-
-                        > Each of its input values gives back exactly one output value.
-
-                    </script>
-                </section>
-
-                <section data-markdown>
-                    <script type="text/template">
-                        ### Function
-
-                        ![Function](images/function-sets.gif "Function")
-
-                        <small>[Source](http://www.mathsisfun.com/sets/function.html)</small>
-                    </script>
-                </section>
-
-                <section data-markdown>
-                    <script type="text/template">
-                        ### Not a Function
-
-                        ![Not a Function](images/relation-not-function.gif "Not a Function")
-
-                        <small>[Source](http://www.mathsisfun.com/sets/function.html)</small>
-                    </script>
-                </section>
-
-                <section data-markdown>
-                    <script type="text/template">
-                        ### Vertical Line Test
-
-                        <img src="images/vertical-line-test.gif" />
-
-                        <small>[Source](http://www.mathsisfun.com/sets/function.html)</small>
-                    </script>
                 </section>
 
                 <section data-markdown>
@@ -518,9 +518,9 @@ var f = curriedAddition(1)(2)(5)(3)(4);
 
                         ```
                         var compose = function(f,g) {
-                        return function(x) {
-                        return f(g(x));
-                        };
+                          return function(x) {
+                            return f(g(x));
+                          };
                         };
                         ```
 
@@ -542,11 +542,11 @@ var f = curriedAddition(1)(2)(5)(3)(4);
 
                         ```
                         var openingSpan = function(input) {
-                        return "<span>" + input;
+                          return "<span>" + input;
                         };
 
                         var closingSpan = function(input) {
-                        return input + "</span>";
+                          return input + "</span>";
                         };
 
                         var encloseInSpan = compose(closingSpan, openingSpan);
@@ -573,19 +573,19 @@ var f = curriedAddition(1)(2)(5)(3)(4);
 
                         ```
                         var openingSpan = function(input) {
-                        return "<span>" + input;
+                          return "<span>" + input;
                         };
 
                         var closingSpan = function(input) {
-                        return input + "</span>";
+                          return input + "</span>";
                         };
 
                         var openingBody = function(input) {
-                        return "<body>" + input;
+                          return "<body>" + input;
                         };
 
                         var closingBody = function(input) {
-                        return input + "</body>";
+                          return input + "</body>";
                         };
 
                         var htmlEscaper1 = R.compose(closingBody, closingSpan, openingSpan, openingBody);
@@ -613,7 +613,7 @@ var f = curriedAddition(1)(2)(5)(3)(4);
                         ```
                         //not pointfree because we mention the data: word
                         var snakeCase = function(word) {
-                        return word.toLowerCase().replace(/\s+/ig, '_');
+                          return word.toLowerCase().replace(/\s+/ig, '_');
                         };
 
                         //pointfree
@@ -630,7 +630,7 @@ var f = curriedAddition(1)(2)(5)(3)(4);
                         ```js
                         //not pointfree because we mention the data: name
                         var initials = function(name) {
-                        return name.split(' ').map(compose(toUpperCase, head)).join('. ');
+                          return name.split(' ').map(compose(toUpperCase, head)).join('. ');
                         };
 
                         //pointfree
@@ -704,17 +704,17 @@ var f = curriedAddition(1)(2)(5)(3)(4);
                         ```
                         //  strLength :: String -> Number
                         var strLength = function(s) {
-                        return s.length;
+                          return s.length;
                         }
 
                         //  join :: String -> [String] -> String
                         var join = curry(function(what, xs) {
-                        return xs.join(what);
+                          return xs.join(what);
                         });
 
                         //  match :: Regex -> String -> [String]
                         var match = curry(function(reg, s) {
-                        return s.match(reg);
+                          return s.match(reg);
                         });
                         ```
                     </script>
@@ -727,7 +727,7 @@ var f = curriedAddition(1)(2)(5)(3)(4);
                         ```
                         //  replace :: Regex -> String -> String -> String
                         var replace = curry(function(reg, sub, s) {
-                        return s.replace(reg, sub);
+                          return s.replace(reg, sub);
                         });
 
                         // head :: [a] -> a
@@ -765,6 +765,8 @@ var f = curriedAddition(1)(2)(5)(3)(4);
                     <script type="text/template">
                         ## Credits:
                         * [Professor Frisby's Mostly Adequate Guide to Functional Programming](https://github.com/MostlyAdequate/mostly-adequate-guide)
+                        
+                        <img height="280px" src="https://raw.githubusercontent.com/MostlyAdequate/mostly-adequate-guide/master/images/cover.png" />
                     </script>
                 </section>
             </div>

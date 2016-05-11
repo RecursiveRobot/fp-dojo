@@ -161,10 +161,10 @@ used:
 * F#
 * Scala
 
-There is also the less widely used /Closure/ which is a functional
+There is also the less widely used _Clojure_ which is a functional
 dialect LISP developed on the JVM.
 
-We might also do follow up dojos on the more advanced topics in
+We might also do follow-up dojos on the more advanced topics in
 functional programming if there is enough interest. So Please if you
 are reading this and think that it would be a good idea please let us
 know so that we can gauge the level of interest.
