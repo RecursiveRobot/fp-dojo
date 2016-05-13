@@ -31,14 +31,14 @@ Goals
   Programming
 * To equip you with all the tools needed to start coding JavaScript in
   a functional style
-* To peak your interest enough to foster further research into FP
+* To pique your interest enough to foster further research into FP
 
 Preparation
 -----------
 
 You need to have a local copy of this repo and you need to have node
-installed. To make sure that your installation is working correctly
-you can run:
+installed. To make sure that your installation is working correctly,
+you can run the following from the root folder of the repo:
 ```
 npm install
 npm install mocha -g
@@ -161,7 +161,7 @@ used:
 * F#
 * Scala
 
-There is also the less widely used _Clojure_ which is a functional
+There is also the less widely used _Clojure_, which is a functional
 dialect LISP developed on the JVM.
 
 We might also do follow-up dojos on the more advanced topics in
