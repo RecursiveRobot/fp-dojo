@@ -1,6 +1,5 @@
-var Util        = require ('../lib/util');
-var _           = require ('ramda');
-var Interpreter = require ('./interpret');
+var _    = require ('ramda');
+var Util = require ('../lib/util');
 
 /* NOTE:
  * The exercises appear out of order in this file.
@@ -52,15 +51,15 @@ var TERMINAL = 'Terminal';
  * Part Eight: Implement respond using the appropriate evaluation
  * functions.
  */
-var respond = _.curry (function (reply, value) {
+var respond = _.curry (function (interpreter, reply, value) {
     if (value.Type == GREETING || value.Type == STATEMENT || value.Type == QUESTION){
-        return reply + Interpreter.replySentence (value);
+        return reply + "\n" + interpreter (value);
     } else {
         return reply;
     }
 });
 
-/* [ComplexObject] -> String
+/* (ComplexObject -> String) -> [ComplexObject] -> String
  *
  * Part Six: Implement evaluate by collecting the results of evaluating each
  * element of the [ComplexObject] in a single string message to be
@@ -68,12 +67,22 @@ var respond = _.curry (function (reply, value) {
  *
  * Hint: Use reduce and the functions which follow.
  */
-var evaluate = _.reduce (respond, "");
+var evaluate = _.curry (function (interpreter, xs) {
+    return _.reduce (respond (interpreter), "", xs);
+});
 
 // Some useful regular expressions:
 var MATCH_WHITESPACE             = / +/g;
 var MATCH_PUNCTUATION            = /([.!?])/g;
 var MATCH_NON_ACCEPTED_CHARACTER = /[^a-zA-Z.!? ]/g;
+
+/* RegEx -> String -> String -> String -> String
+ * Replace the given regular expressing with the given replacement
+ * string in the given string.
+ */
+var regexReplace = _.curry (function (pattern, replaceWith, x) {
+    return x.replace (pattern, replaceWith);
+});
 
 /* String -> String
  * Produce a new string from the given string in which the punctuation
@@ -99,14 +108,6 @@ var collapseSuccessiveWhitespaces = function (toFilter) {
     return ???;
 };
 
-/* RegEx -> String -> String -> String -> String
- * Replace the given regular expressing with the given replacement
- * string in the given string.
- */
-var regexReplace = _.curry (function (pattern, replaceWith, x) {
-    return x.replace (pattern, replaceWith);
-});
-
 /* String -> [String]
  *
  * Rules:
@@ -124,69 +125,6 @@ var tokenise = _.compose (_.filter (_.compose (_.not, _.equals (""))),
                           ???,
                           ???);
 
-/* [String] -> [ComplexObject]
- *
- * Part four:
- * Hint: try each complex parser (parsers which read complex types)
- * and use the first one which has any result, if none do then we can
- * return an empty list, because we couldn't parse anything.
- *
- * Further Hint: Use recursion.
- */
-function parseTokens (tokens) {
-    var firstDefined = _.compose (_.head, _.dropWhile (_.compose (_.equals (undefined), _.prop ('Parsed'))));
-    var parsed = firstDefined ([???...]);
-    if (parsed == undefined) {
-            ???;
-    }
-    return _.concat ([parsed.Parsed], parseTokens (???));
-}
-
-/* String -> [ComplexObject]
- *
- * Part Two: implement parse.
- * Hint: use composition, and look at type signatures.
- */
-var parse = _.compose (???, ???);
-
-/* String -> String
- *
- * During the course of this exercise we will implement the pieces we
- * need to make our bot semi-literate.
- */
-var reply = _.compose (evaluate, parse);
-
-/* [String] -> String
- *
- * Part one: greet all the users in one message.
- * e.g. 1
- *  - userNames = ['Bob', 'Fred']
- *  - returns "Hello Bob and Fred!"
- * e.g. 2
- *  - userNames = ['Bob', 'Fred', 'Alice']
- *  - returns "Hello Bob, Fred and Alice!"
- * e.g. 3
- *  - userNames = []
- *  - returns "Hello, anyone there?"
- * e.g. 4
- *  - userNames = ['Bob', 'Fred', 'Alice', 'Frank', 'Mary']
- *  - returns "Hello everyone!"
- *  - Note: Any number of users >= 5 produces the same result
- */
-function initialGreeting (userNames) {
-    if (userNames.length == 0) {
-        return ???;
-    } else if (userNames.length >= 5) {
-        return ???;
-    } else if (userNames.length == 1) {
-        return ???;
-    } else {
-        return "Hello "
-            + _.join (", ") (???)
-            + " and " + ??? + "!";
-    }
-}
-
 /* A parser returns a parsed object of the following schema:
  * {
  *   'Remaining': [String],
@@ -202,66 +140,6 @@ function initialGreeting (userNames) {
  */
 var TERMINAL_KEYWORDS = ['.', '!', '?'];
 var QUESTION_START_KEYWORDS = ['How', 'Where', 'What', 'Why', 'Is'];
-
-/* [String] -> String -> [[String], [String]]
- * Split the given string list at the first occurance of the given
- * token and keep the token which was split on.
- */
-function splitUpToTerminal (xs) {
-    var split = _.splitWhen (Util.isOneOfIgnoreCase (TERMINAL_KEYWORDS), xs);
-    return [_.append (split[1][0], split[0]), _.slice (1, split[1].length, split[1])];
-}
-
-/* [String] -> [String]
- * Produce the given list without the last element.
- */
-function sliceAllButLast (xs) {
-    return _.slice (1, xs[0].length - 1, xs[0]);
-}
-
-/* String -> Object
- * Produce an object simple type type from the given string for the
- * object value.
- */
-function constructObject (value) {
-    return {'Type': OBJECT,
-            'Value': value};
-}
-
-/* [String] -> ComplexObject
- * Construct a complex object from the tokens which comprise it.
- */
-function constructComplexObject (tokens, type) {
-    var keyword  = tokens[0];
-    var objects  = _.map (constructObject, sliceAllButLast (tokens));
-    var terminal = tokens[tokens.length - 1];
-    return {'Type': type,
-            'Values':
-            _.concat ([{'Type': KEYWORD,
-                        'Value': keyword}],
-                      objects,
-                      [{'Type': TERMINAL,
-                        'Value': terminal}])};
-}
-
-/* String -> [String] -> [String] -> {'Remaining': [String], 'Parsed': ComplexObject}
- * Parse a statement of type, type matching a keyword from keywords
- * and ending with a TERMINAL keyword.
- */
-function parseTerminated (type, keywords) {
-    return function (tokens) {
-        if (Util.isOneOfIgnoreCase (keywords) (_.head (tokens))) {
-            var splittedUpToTerminal = splitUpToTerminal (tokens);
-            var tokensUpToTerminal   = splittedUpToTerminal[0];
-            if (Util.isOneOfIgnoreCase (TERMINAL_KEYWORDS, _.last (tokensUpToTerminal[0]))) {
-                return {'Remaining': splittedUpToTerminal[1],
-                        'Parsed': constructComplexObject (tokensUpToTerminal, type)};
-            }
-        };
-        return {'Remaining': tokens,
-                'Parsed': undefined};
-    };
-}
 
 /* [String] -> {'Remaining': [String], 'Parsed': ComplexObject}
  *
@@ -306,19 +184,146 @@ var parseGreeting  = parseTerminated (GREETING, GREETING_START_KEYWORDS);
 function parseStatement (tokens) {
     var splittedUpToTerminal = splitUpToTerminal (tokens);
     var tokensUpToTerminal   = splittedUpToTerminal[0];
-    if (Util.isOneOfIgnoreCase (TERMINAL_KEYWORDS, _.last (tokensUpToTerminal[0]))) {
+    if (Util.isOneOfIgnoreCase (TERMINAL_KEYWORDS, _.last (tokensUpToTerminal))) {
         return {'Remaining': splittedUpToTerminal[1],
-                'Parsed': constructComplexObject (tokensUpToTerminal, STATEMENT)};
+                'Parsed': constructComplexObject (tokensUpToTerminal, STATEMENT, OBJECT)};
     }
     return {'Remaining': tokens,
             'Parsed': undefined};
 };
+
+/* [String] -> [ComplexObject]
+ *
+ * Part four:
+ * Hint: try each complex parser (parsers which read complex types)
+ * and use the first one which has any result, if none do then we can
+ * return an empty list, because we couldn't parse anything.
+ *
+ * Further Hint: Use recursion.
+ */
+function parseTokens (tokens) {
+    var firstDefined = _.compose (_.head, _.dropWhile (_.compose (_.equals (undefined), _.prop ('Parsed'))));
+    var parsed = firstDefined ([???...]);
+    if (parsed == undefined) {
+            ???;
+    }
+    return _.concat ([parsed.Parsed], parseTokens (???));
+}
+
+/* String -> [ComplexObject]
+ *
+ * Part Two: implement parse.
+ * Hint: use composition, and look at type signatures.
+ */
+var parse = _.compose (???, ???);
+
+/* (ComplexObject -> String) -> String -> String
+ *
+ * During the course of this exercise we will implement the pieces we
+ * need to make our bot semi-literate.
+ */
+var reply = _.curry (function (interpreter, sentence) {
+    return _.compose (evaluate (interpreter), parse) (sentence);
+});
+
+/* [String] -> String
+ *
+ * Part one: greet all the users in one message.
+ * e.g. 1
+ *  - userNames = ['Bob', 'Fred']
+ *  - returns "Hello Bob and Fred!"
+ * e.g. 2
+ *  - userNames = ['Bob', 'Fred', 'Alice']
+ *  - returns "Hello Bob, Fred and Alice!"
+ * e.g. 3
+ *  - userNames = []
+ *  - returns "Hello, anyone there?"
+ * e.g. 4
+ *  - userNames = ['Bob', 'Fred', 'Alice', 'Frank', 'Mary']
+ *  - returns "Hello everyone!"
+ *  - Note: Any number of users >= 5 produces the same result
+ */
+function initialGreeting (userNames) {
+    if (userNames.length == 0) {
+        return ???;
+    } else if (userNames.length >= 5) {
+        return ???;
+    } else if (userNames.length == 1) {
+        return ???;
+    } else {
+        return "Hello "
+            + _.join (", ") (???)
+            + " and " + ??? + "!";
+    }
+}
+
+/* [String] -> String -> [[String], [String]]
+ * Split the given string list at the first occurance of the given
+ * token and keep the token which was split on.
+ */
+function splitUpToTerminal (xs) {
+    var split = _.splitWhen (Util.isOneOfIgnoreCase (TERMINAL_KEYWORDS), xs);
+    return [_.append (split[1][0], split[0]), _.slice (1, split[1].length, split[1])];
+}
+
+/* [String] -> [String]
+ * Produce the given list without the last element.
+ */
+function sliceAllButLast (xs) {
+    return _.slice (1, xs.length - 1, xs);
+}
+
+/* String -> Object
+ * Produce an object simple type type from the given string for the
+ * object value.
+ */
+function constructObject (value) {
+    return {'Type': OBJECT,
+            'Value': value};
+}
+
+/* [String] -> ComplexObject
+ * Construct a complex object from the tokens which comprise it.
+ */
+function constructComplexObject (tokens, type, typeOfFirst) {
+    var keyword  = tokens[0];
+    var objects  = _.map (constructObject, sliceAllButLast (tokens));
+    var terminal = tokens[tokens.length - 1];
+    var firstType = typeOfFirst ? typeOfFirst : KEYWORD;
+    return {'Type': type,
+            'Values':
+            _.concat (_. concat ([{'Type': firstType,
+                                   'Value': keyword}],
+                                 objects),
+                      [{'Type': TERMINAL,
+                        'Value': terminal}])};
+}
+
+/* String -> [String] -> [String] -> {'Remaining': [String], 'Parsed': ComplexObject}
+ * Parse a statement of type, type matching a keyword from keywords
+ * and ending with a TERMINAL keyword.
+ */
+function parseTerminated (type, keywords) {
+    return function (tokens) {
+        if (Util.isOneOfIgnoreCase (keywords, _.head (tokens))) {
+            var splittedUpToTerminal = splitUpToTerminal (tokens);
+            var tokensUpToTerminal   = splittedUpToTerminal[0];
+            if (Util.isOneOfIgnoreCase (TERMINAL_KEYWORDS, _.last (tokensUpToTerminal))) {
+                return {'Remaining': splittedUpToTerminal[1],
+                        'Parsed': constructComplexObject (tokensUpToTerminal, type)};
+            }
+        };
+        return {'Remaining': tokens,
+                'Parsed': undefined};
+    };
+}
 
 module.exports = {initialGreeting: initialGreeting,
                   tokenise: tokenise,
                   parseGreeting: parseGreeting,
                   parseQuestion: parseQuestion,
                   parseStatement: parseStatement,
+                  parseTokens: parseTokens,
                   reply: reply,
                   GREETING: GREETING,
                   STATEMENT: STATEMENT,
