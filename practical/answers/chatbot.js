@@ -1,5 +1,6 @@
-var _    = require ('ramda');
-var Util = require ('util');
+var _           = require ('ramda');
+var Util        = require ('util');
+var Interpreter = require ('../lib/nterpret');
 
 /* NOTE:
  * The exercises appear out of order in this file.
@@ -52,12 +53,8 @@ var TERMINAL = 'Terminal';
  * functions.
  */
 var respond = _.curry (function (reply, value) {
-    if (value.Type == GREETING){
-        return reply + evaluateGreeting (value);
-    } else if (value.Type == STATEMENT) {
-        return reply + evaluateStatement (value);
-    } else if (value.Type == QUESTION) {
-        return reply + evaluateQuestion (value);
+    if (value.Type == GREETING || value.Type == STATEMENT || value.Type == QUESTION){
+        return reply + Interpreter.replySentence (value);
     } else {
         return reply;
     }
@@ -324,39 +321,6 @@ function parseStatement (tokens) {
     return {'Remaining': tokens,
             'Parsed': undefined};
 };
-
-/* Keep in mind that the following three functions should be pure.  It
- * limits your options (because we haven't accounted for 'state') but
- * if you make any of these impure then the entire program becomes
- * impure.
- */
-
-/* ComplexObject -> String
- *
- * Part Nine: Implement the evaluate greeting method in any way you
- * please :)
- */
-function evaluateGreeting (greeting) {
-    return "Found greeting";
-}
-
-/* ComplexObject -> String
- *
- * Part Ten: Implement the evaluate statement method in any way you
- * please :)
- */
-function evaluateStatement (statement) {
-    return "Found statement";
-}
-
-/* ComplexObject -> String
- *
- * Part Eleven: Implement the evaluate question method in any awy you
- * please :)
- */
-function evaluateQuestion (question) {
-    return "Evaluate question";
-}
 
 module.exports = {initialGreeting: initialGreeting,
                   tokenise: tokenise,
