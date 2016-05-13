@@ -174,5 +174,3 @@ TODO
 
 * TODO Finish the instructions on hooking up with slack
 * TODO Make testing more thorough
-* TODO Use TODO in the practical for each of the parts to flag where
-  work ought to be done
