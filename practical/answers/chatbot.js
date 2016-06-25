@@ -72,7 +72,7 @@ var evaluate = _.curry (function (interpreter, xs) {
 });
 
 // Some useful regular expressions:
-var MATCH_WHITESPACE             = / +/g;
+var MATCH_WHITESPACE             = /[\t ]+/g;
 var MATCH_PUNCTUATION            = /([.!?])/g;
 var MATCH_NON_ACCEPTED_CHARACTER = /[^a-zA-Z.!? ]/g;
 
@@ -324,6 +324,9 @@ module.exports = {initialGreeting: initialGreeting,
                   parseGreeting: parseGreeting,
                   parseQuestion: parseQuestion,
                   parseStatement: parseStatement,
+                  splitOutPunctuation: splitOutPunctuation,
+                  filterNonAcceptedCharacters: filterNonAcceptedCharacters,
+                  collapseSuccessiveWhitespaces: collapseSuccessiveWhitespaces,
                   parseTokens: parseTokens,
                   reply: reply,
                   GREETING: GREETING,
