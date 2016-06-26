@@ -2,7 +2,7 @@ require('../../support');
 var _ = require('ramda');
 
 // Note: we've provided some starting points to make things easier.
-// Replace the question marks with code to implement the function.
+// Replace the 'undefined' with code to implement the function.
 
 // Exercise 1
 //==============
@@ -13,7 +13,7 @@ var _ = require('ramda');
 
 var words = function(str) {
     return _.split(' ', str);
-}; // Starting point: var words = _.split (???)
+}; // Starting point: var words = _.split (undefined)
 
 // Exercise 1a
 //==============
@@ -21,7 +21,7 @@ var words = function(str) {
 
 var sentences = undefined;
 
-// Starting point: var sentences = _.map (???)
+// Starting point: var sentences = _.map (undefined)
 
 // Exercise 2
 //==============
@@ -31,7 +31,7 @@ var filterQs = function(xs) {
     return filter(function(x){ return match(/q/i, x);  }, xs);
 };
 
-// Starting point: var filterQs = ??? (??? (???))
+// Starting point: var filterQs = undefined (undefined (undefined))
 
 // Exercise 3
 //==============

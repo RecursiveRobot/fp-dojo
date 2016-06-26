@@ -9,7 +9,7 @@ var Util = require ('../lib/util');
 
 /* NOTE: (as with the exercises)
  * We've provided some starting points to make things easier.
- * Replace the question marks with code to implement the function.
+ * Replace the 'undefined' with code to implement the function.
  */
 
 /* The chat bot we'll write will only understand bot-lang: a very
@@ -105,7 +105,7 @@ var filterNonAcceptedCharacters = function (toFilter) {
  * successive white spaces.
  */
 var collapseSuccessiveWhitespaces = function (toFilter) {
-    return ???;
+    return undefined;
 };
 
 /* String -> [String]
@@ -122,8 +122,8 @@ var collapseSuccessiveWhitespaces = function (toFilter) {
 var tokenise = _.compose (_.filter (_.compose (_.not, _.equals (""))),
                           _.split (' '),
                           collapseSuccessiveWhitespaces,
-                          ???,
-                          ???);
+                          undefined,
+                          undefined);
 
 /* A parser returns a parsed object of the following schema:
  * {
@@ -203,11 +203,11 @@ function parseStatement (tokens) {
  */
 function parseTokens (tokens) {
     var firstDefined = _.compose (_.head, _.dropWhile (_.compose (_.equals (undefined), _.prop ('Parsed'))));
-    var parsed = firstDefined ([???...]);
+    var parsed = firstDefined ([undefined]);
     if (parsed == undefined) {
-            ???;
+        undefined;
     }
-    return _.concat ([parsed.Parsed], parseTokens (???));
+    return _.concat ([parsed.Parsed], parseTokens (undefined));
 }
 
 /* String -> [ComplexObject]
@@ -215,7 +215,7 @@ function parseTokens (tokens) {
  * Part Two: implement parse.
  * Hint: use composition, and look at type signatures.
  */
-var parse = _.compose (???, ???);
+var parse = _.compose (undefined, undefined);
 
 /* (ComplexObject -> String) -> String -> String
  *
@@ -245,15 +245,15 @@ var reply = _.curry (function (interpreter, sentence) {
  */
 function initialGreeting (userNames) {
     if (userNames.length == 0) {
-        return ???;
+        return undefined;
     } else if (userNames.length >= 5) {
-        return ???;
+        return undefined;
     } else if (userNames.length == 1) {
-        return ???;
+        return undefined;
     } else {
         return "Hello "
-            + _.join (", ") (???)
-            + " and " + ??? + "!";
+            + _.join (", ") (undefined)
+            + " and " + undefined + "!";
     }
 }
 

@@ -9,7 +9,7 @@ var Util = require ('../lib/util');
 
 /* NOTE: (as with the exercises)
  * We've provided some starting points to make things easier.
- * Replace the question marks with code to implement the function.
+ * Replace the 'undefined' with code to implement the function.
  */
 
 /* The chat bot we'll write will only understand bot-lang: a very

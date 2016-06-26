@@ -3,7 +3,7 @@ var _ = require('ramda');
 var accounting = require('accounting');
 
 // Note: we've provided some starting points to make things easier.
-// Replace the question marks with code to implement the function.
+// Replace the 'undefined' with code to implement the function.
 
 // Example Data
 var CARS = [
@@ -28,14 +28,14 @@ var isLastInStock = function(cars) {
     return _.prop('in_stock', reversed_cars);
 };
 
-// Starting point: var isLastInStock = _.compose (_.prop (???), ???)
+// Starting point: var isLastInStock = _.compose (_.prop (undefined), undefined)
 
 // Exercise 2:
 // ============
 // use _.compose(), _.prop() and _.head() to retrieve the name of the first car
 var nameOfFirstCar = undefined;
 
-// Starting point: var nameOfFirstCar = _.compose (???, ???)
+// Starting point: var nameOfFirstCar = _.compose (undefined, undefined)
 
 // Exercise 3:
 // ============
@@ -47,7 +47,7 @@ var averageDollarValue = function(cars) {
     return _average(dollar_values);
 };
 
-// Starting point: var averageDollarValue = _.compose (???, _.map (???))
+// Starting point: var averageDollarValue = _.compose (undefined, _.map (undefined))
 
 
 // Exercise 4:
