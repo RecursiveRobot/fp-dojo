@@ -1,3 +1,3 @@
 #!/bin/bash
 
-node practical/bin/cli.js
+node bin/cli.js

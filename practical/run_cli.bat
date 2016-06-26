@@ -1,1 +1,1 @@
-node practical\bin\cli.js
+node bin\cli.js

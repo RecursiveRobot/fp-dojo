@@ -75,9 +75,8 @@ of the practical each time.
 ** Completing the Code
 Throughout this practical the places with code which you're expected
 to correct/fill in are marked by obvious syntactical errors. For
-example the code in the following snippets has a series of three
-question marks which indicate that you ought to replace them with the
-code which ought to be in their place.
+example the code in the following snippets has an 'undefined' indicating
+that you ought to replace it with the code to make the snippet work.
 
 #+BEGIN_SRC javascript
   var _ = require ('ramda');
@@ -87,7 +86,7 @@ code which ought to be in their place.
   } 
 
   var capitalizeFirst =
-      _.compose (???, _.head);
+      _.compose (undefined, _.head);
 #+END_SRC
 
 In the first snippet you're expected to supply the function which
@@ -100,8 +99,8 @@ is returned, capitalised.
   function respondToGreeting (greetingMessage) {
       if (greetingMessage == "Hello") {
           return "Blah";
-      } else if (greetingMessage == ???) {
-              ???
+      } else if (greetingMessage == undefined) {
+              return undefined;
       }
       return "Unmatched";
   }

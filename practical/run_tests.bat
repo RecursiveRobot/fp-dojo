@@ -1,1 +1,1 @@
-mocha tests/bot_spec.js
+mocha tests\bot_spec.js
