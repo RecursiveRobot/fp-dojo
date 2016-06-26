@@ -34,6 +34,11 @@ describe ("Bot test Suite", function (){
         assert.equal (ChatBot.initialGreeting (['Bob', 'Fred', 'Alice', 'Frank', 'Mary']), "Hello everyone!");;
         assert.equal (ChatBot.initialGreeting (['Bob']), "Hello Bob!");
     });
+    it ("Split string up to terminal character.", function () {
+        assert.deepEqual (ChatBot.splitUpToTerminal ([]), [[], []]);
+        assert.deepEqual (ChatBot.splitUpToTerminal (["Blah", "test", "blerg", ".", "haha"]), [["Blah", "test", "blerg", "."], ["haha"]]);
+        assert.deepEqual (ChatBot.splitUpToTerminal (["Blah", "test", "blerg", ".", "Haha", "hehe", "."]), [["Blah", "test", "blerg", "."], ["Haha", "hehe", "."]]);
+    });
     it ("Tokenise message text.", function () {
         assert.deepEqual (ChatBot.tokenise ("This is a test."), ['This', "is", "a", "test", "."]);
         assert.deepEqual (ChatBot.tokenise (""), []);
