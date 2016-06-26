@@ -61,18 +61,16 @@ var respond = _.curry (function (interpreter, reply, value) {
 
 /* (ComplexObject -> String) -> [ComplexObject] -> String
  *
- * Part Six: Implement evaluate by collecting the results of evaluating each
- * element of the [ComplexObject] in a single string message to be
- * sent back to the user.
- *
- * Hint: Use reduce and the functions which follow.
+ * Collect the results of evaluating each element of the
+ * [ComplexObject] in a single string message to be sent back to the
+ * user.
  */
 var evaluate = _.curry (function (interpreter, xs) {
     return _.reduce (respond (interpreter), "", xs);
 });
 
 // Some useful regular expressions:
-var MATCH_WHITESPACE             = / +/g;
+var MATCH_WHITESPACE             = /[\t ]+/g;
 var MATCH_PUNCTUATION            = /([.!?])/g;
 var MATCH_NON_ACCEPTED_CHARACTER = /[^a-zA-Z.!? ]/g;
 
@@ -96,9 +94,7 @@ var splitOutPunctuation = function (toSplit) {
  * Produce a new string from the given string with non alpha
  * numeric/puncation characters present.
  */
-var filterNonAcceptedCharacters = function (toFilter) {
-    return regexReplace (MATCH_NON_ACCEPTED_CHARACTER, '');
-};
+var filterNonAcceptedCharacters = regexReplace (MATCH_NON_ACCEPTED_CHARACTER, '');
 
 /* String -> String
  * Produce a new string from the given string in which there are no
@@ -164,8 +160,6 @@ var GREETING_START_KEYWORDS = ['Hi', 'Hello', 'Howzit', 'Hey'];
  * e.g. ['Hi', 'Bob', '.']
  *       ^^^^^^^^^^^^^^^^
  *           Greeting
- *
- * Part Four
  */
 var parseGreeting  = parseTerminated (GREETING, GREETING_START_KEYWORDS);
 
@@ -178,8 +172,6 @@ var parseGreeting  = parseTerminated (GREETING, GREETING_START_KEYWORDS);
  * e.g. ['This', 'is', 'a', 'statement', '.']
  *       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
  *                   Statement
- *
- * Part Five
  */
 function parseStatement (tokens) {
     var splittedUpToTerminal = splitUpToTerminal (tokens);
@@ -257,11 +249,12 @@ function initialGreeting (userNames) {
     }
 }
 
-/* [String] -> String -> [[String], [String]]
- * Split the given string list at the first occurance of the given
- * token and keep the token which was split on.
+/* [String] -> [[String], [String]]
+ * Split the given string list at the first occurance of a terminal
+ * keyword token and keep the token which was split on.
  */
 function splitUpToTerminal (xs) {
+    if (xs.length == 0) return [[], []];
     var split = _.splitWhen (Util.isOneOfIgnoreCase (TERMINAL_KEYWORDS), xs);
     return [_.append (split[1][0], split[0]), _.slice (1, split[1].length, split[1])];
 }
@@ -270,7 +263,7 @@ function splitUpToTerminal (xs) {
  * Produce the given list without the last element.
  */
 function sliceAllButLast (xs) {
-    return _.slice (1, xs.length - 1, xs);
+    return _.slice (0, xs.length - 1, xs);
 }
 
 /* String -> Object
@@ -287,7 +280,7 @@ function constructObject (value) {
  */
 function constructComplexObject (tokens, type, typeOfFirst) {
     var keyword  = tokens[0];
-    var objects  = _.map (constructObject, sliceAllButLast (tokens));
+    var objects  = _.map (constructObject, _.tail (sliceAllButLast (tokens)));
     var terminal = tokens[tokens.length - 1];
     var firstType = typeOfFirst ? typeOfFirst : KEYWORD;
     return {'Type': type,
@@ -323,8 +316,16 @@ module.exports = {initialGreeting: initialGreeting,
                   parseGreeting: parseGreeting,
                   parseQuestion: parseQuestion,
                   parseStatement: parseStatement,
+                  splitOutPunctuation: splitOutPunctuation,
+                  filterNonAcceptedCharacters: filterNonAcceptedCharacters,
+                  collapseSuccessiveWhitespaces: collapseSuccessiveWhitespaces,
                   parseTokens: parseTokens,
+                  sliceAllButLast: sliceAllButLast,
+                  constructObject: constructObject,
+                  constructComplexObject: constructComplexObject,
                   reply: reply,
+                  parse: parse,
+                  splitUpToTerminal: splitUpToTerminal,
                   GREETING: GREETING,
                   STATEMENT: STATEMENT,
                   QUESTION: QUESTION,

@@ -61,11 +61,9 @@ var respond = _.curry (function (interpreter, reply, value) {
 
 /* (ComplexObject -> String) -> [ComplexObject] -> String
  *
- * Part Six: Implement evaluate by collecting the results of evaluating each
- * element of the [ComplexObject] in a single string message to be
- * sent back to the user.
- *
- * Hint: Use reduce and the functions which follow.
+ * Collect the results of evaluating each element of the
+ * [ComplexObject] in a single string message to be sent back to the
+ * user.
  */
 var evaluate = _.curry (function (interpreter, xs) {
     return _.reduce (respond (interpreter), "", xs);
@@ -163,8 +161,6 @@ var GREETING_START_KEYWORDS = ['Hi', 'Hello', 'Howzit', 'Hey'];
  * e.g. ['Hi', 'Bob', '.']
  *       ^^^^^^^^^^^^^^^^
  *           Greeting
- *
- * Part Four
  */
 var parseGreeting  = parseTerminated (GREETING, GREETING_START_KEYWORDS);
 
@@ -177,8 +173,6 @@ var parseGreeting  = parseTerminated (GREETING, GREETING_START_KEYWORDS);
  * e.g. ['This', 'is', 'a', 'statement', '.']
  *       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
  *                   Statement
- *
- * Part Five
  */
 function parseStatement (tokens) {
     var splittedUpToTerminal = splitUpToTerminal (tokens);
