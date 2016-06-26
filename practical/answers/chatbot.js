@@ -258,11 +258,12 @@ function initialGreeting (userNames) {
     }
 }
 
-/* [String] -> String -> [[String], [String]]
- * Split the given string list at the first occurance of the given
- * token and keep the token which was split on.
+/* [String] -> [[String], [String]]
+ * Split the given string list at the first occurance of a terminal
+ * keyword token and keep the token which was split on.
  */
 function splitUpToTerminal (xs) {
+    if (xs.length == 0) return [[], []];
     var split = _.splitWhen (Util.isOneOfIgnoreCase (TERMINAL_KEYWORDS), xs);
     return [_.append (split[1][0], split[0]), _.slice (1, split[1].length, split[1])];
 }
@@ -271,7 +272,7 @@ function splitUpToTerminal (xs) {
  * Produce the given list without the last element.
  */
 function sliceAllButLast (xs) {
-    return _.slice (1, xs.length - 1, xs);
+    return _.slice (0, xs.length - 1, xs);
 }
 
 /* String -> Object
@@ -288,7 +289,7 @@ function constructObject (value) {
  */
 function constructComplexObject (tokens, type, typeOfFirst) {
     var keyword  = tokens[0];
-    var objects  = _.map (constructObject, sliceAllButLast (tokens));
+    var objects  = _.map (constructObject, _.tail (sliceAllButLast (tokens)));
     var terminal = tokens[tokens.length - 1];
     var firstType = typeOfFirst ? typeOfFirst : KEYWORD;
     return {'Type': type,
@@ -328,7 +329,12 @@ module.exports = {initialGreeting: initialGreeting,
                   filterNonAcceptedCharacters: filterNonAcceptedCharacters,
                   collapseSuccessiveWhitespaces: collapseSuccessiveWhitespaces,
                   parseTokens: parseTokens,
+                  sliceAllButLast: sliceAllButLast,
+                  constructObject: constructObject,
+                  constructComplexObject: constructComplexObject,
                   reply: reply,
+                  parse: parse,
+                  splitUpToTerminal: splitUpToTerminal,
                   GREETING: GREETING,
                   STATEMENT: STATEMENT,
                   QUESTION: QUESTION,

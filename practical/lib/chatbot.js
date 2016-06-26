@@ -89,7 +89,7 @@ var regexReplace = _.curry (function (pattern, replaceWith, x) {
  * will always be surrounded by whitespace.
  */
 var splitOutPunctuation = function (toSplit) {
-    return ???;
+    return undefined;
 };
 
 /* String -> String

@@ -34,6 +34,38 @@ describe ("Bot test Suite", function (){
         assert.equal (ChatBot.initialGreeting (['Bob', 'Fred', 'Alice', 'Frank', 'Mary']), "Hello everyone!");;
         assert.equal (ChatBot.initialGreeting (['Bob']), "Hello Bob!");
     });
+    it ("Split string up to terminal character.", function () {
+        assert.deepEqual (ChatBot.splitUpToTerminal ([]), [[], []]);
+        assert.deepEqual (ChatBot.splitUpToTerminal (["Blah", "test", "blerg", ".", "haha"]), [["Blah", "test", "blerg", "."], ["haha"]]);
+        assert.deepEqual (ChatBot.splitUpToTerminal (["Blah", "test", "blerg", ".", "Haha", "hehe", "."]), [["Blah", "test", "blerg", "."], ["Haha", "hehe", "."]]);
+    });
+    it ("Slice list up to last element", function () {
+        assert.deepEqual (ChatBot.sliceAllButLast ([]), []);
+        assert.deepEqual (ChatBot.sliceAllButLast ([1, 2, 3, 4]), [1, 2, 3]);
+        assert.deepEqual (ChatBot.sliceAllButLast (["Blah", "Blah"]), ["Blah"]);
+    });
+    it ("Construct an object.", function () {
+        assert.deepEqual (ChatBot.constructObject (undefined), {'Type': ChatBot.OBJECT,
+                                                                'Value': undefined});
+        assert.deepEqual (ChatBot.constructObject (2), {'Type': ChatBot.OBJECT,
+                                                        'Value': 2});
+    });
+    it ("Construct a complex object.", function () {
+        assert.deepEqual (ChatBot.constructComplexObject ([], undefined, undefined),
+                          {'Type': undefined,
+                           'Values': [{'Type': ChatBot.KEYWORD,
+                                       'Value': undefined},
+                                      {'Type': ChatBot.TERMINAL,
+                                       'Value': undefined}]});
+        assert.deepEqual (ChatBot.constructComplexObject (["Hello", "there", "."], ChatBot.GREETING, ChatBot.KEYWORD),
+                          {'Type': ChatBot.GREETING,
+                           'Values': [{'Type': ChatBot.KEYWORD,
+                                       'Value': "Hello"},
+                                      {'Type': ChatBot.OBJECT,
+                                       'Value': "there"},
+                                      {'Type': ChatBot.TERMINAL,
+                                       'Value': "."}]});
+    });
     it ("Tokenise message text.", function () {
         assert.deepEqual (ChatBot.tokenise ("This is a test."), ['This', "is", "a", "test", "."]);
         assert.deepEqual (ChatBot.tokenise (""), []);
