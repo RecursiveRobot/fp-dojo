@@ -121,9 +121,9 @@ var collapseSuccessiveWhitespaces = function (toFilter) {
  */
 var tokenise = _.compose (_.filter (_.compose (_.not, _.equals (""))),
                           _.split (' '),
-                          collapseSuccessiveWhitespaces,
-                          undefined,
-                          undefined);
+                          collapseSuccessiveWhitespaces);
+//                        undefined, <- uncomment and implement
+//                        undefined);
 
 /* A parser returns a parsed object of the following schema:
  * {
@@ -215,7 +215,7 @@ function parseTokens (tokens) {
  * Part Two: implement parse.
  * Hint: use composition, and look at type signatures.
  */
-var parse = _.compose (undefined, undefined);
+var parse = undefined; // Starting point: _.compose (undefined, undefined);
 
 /* (ComplexObject -> String) -> String -> String
  *
