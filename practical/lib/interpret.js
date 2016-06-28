@@ -7,9 +7,12 @@ var fs  = require ('fs');
  * object it came from.
  */
 function toSentence (sentenceObject) {
+    if (sentenceObject == undefined) return "";
     var values = sentenceObject.Values;
+    var last   = values.length > 0 ? (_.last (sentenceObject.Values)).Value : "";
     return _.join (" ", _.map (_.prop ('Value'),
-                               sentenceObject.Values));
+                               Bot.sliceAllButLast (values)))
+        + last;
 }
 
 /* Association -> Association -> Int
@@ -62,17 +65,6 @@ var bestMatch = _.curry (function (aggregatedContent, sentenceObject) {
                                   {bestMatch: undefined, bestScore: 0},
                                   contentToSearch)).bestMatch;
     return toSentence (bestSentence.thisSentence);
-});
-
-/* EnglishContent -> [ComplexObject] -> EnglishContent
- * Associate another complex object to a following complex object in
- * the given content object.
- */
-var associate = _.curry (function (content, association) {
-    var passibleContent = content (association[0]); // TODO: complete
-    return _.curry (function () {
-        return ;
-    });
 });
 
 /* WordCount -> ComplexObject -> WordCount
@@ -166,7 +158,16 @@ function parseFile (fileContents) {
     return _.reduce (accumulateToParsed, parsedContent, tokensWithFollowing);
 }
 
-replyBook = readFile ("Book.txt");
+var book = undefined;
+
+replyBook = function () {
+    if (book == undefined) {
+        var book = readFile ("Book.txt");
+    };
+    return book;
+};
 
 module.exports = {replySentence: function (sentence) {
-    return bestMatch (replyBook, sentence);}};
+    return bestMatch (replyBook, sentence);},
+                  toSentence : toSentence,
+                  score : score};

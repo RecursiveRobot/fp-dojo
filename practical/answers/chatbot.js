@@ -1,5 +1,6 @@
-var _    = require ('ramda');
-var Util = require ('../lib/util');
+var _               = require ('ramda');
+var Util            = require ('../lib/util');
+var curry_exercises = require ('../../lessons/answers/curry/curry_exercises.js');
 
 /* NOTE:
  * The exercises appear out of order in this file.
@@ -69,58 +70,7 @@ var evaluate = _.curry (function (interpreter, xs) {
     return _.reduce (respond (interpreter), "", xs);
 });
 
-// Some useful regular expressions:
-var MATCH_WHITESPACE             = /[\t ]+/g;
-var MATCH_PUNCTUATION            = /([.!?])/g;
-var MATCH_NON_ACCEPTED_CHARACTER = /[^a-zA-Z.!? ]/g;
-
-/* RegEx -> String -> String -> String -> String
- * Replace the given regular expressing with the given replacement
- * string in the given string.
- */
-var regexReplace = _.curry (function (pattern, replaceWith, x) {
-    return x.replace (pattern, replaceWith);
-});
-
-/* String -> String
- * Produce a new string from the given string in which the punctuation
- * will always be surrounded by whitespace.
- */
-var splitOutPunctuation = regexReplace (MATCH_PUNCTUATION, " $1 ");
-
-/* String -> String
- * Produce a new string from the given string with non alpha
- * numeric/puncation characters present.
- */
-var filterNonAcceptedCharacters = regexReplace (MATCH_NON_ACCEPTED_CHARACTER, '');
-
-/* String -> String
- * Produce a new string from the given string in which there are no
- * successive white spaces.
- */
-var collapseSuccessiveWhitespaces = regexReplace (MATCH_WHITESPACE, " ");
-
-function trace (x) {
-    console.log (x);
-    return x;
-}
-
-/* String -> [String]
- *
- * Rules:
- *  - Tokens are separated by spaces except in the case of punctuation.
- *  - Only alpha characters and punctuation is allowed in the token
- *    list.
- *  - Repeated spaces should be collapsed so that tokens separated by
- *    repeated spaces only create a single token.
- *
- * Part Three: implement tokenize
- */
-var tokenise = _.compose (_.filter (_.compose (_.not, _.equals (""))),
-                          _.split (' '),
-                          collapseSuccessiveWhitespaces,
-                          splitOutPunctuation,
-                          filterNonAcceptedCharacters);
+var tokenise = curry_exercises.tokenise;
 
 /* A parser returns a parsed object of the following schema:
  * {
@@ -187,7 +137,7 @@ function parseStatement (tokens) {
 
 /* [String] -> [ComplexObject]
  *
- * Part four:
+ * Part two:
  * Hint: try each complex parser (parsers which read complex types)
  * and use the first one which has any result, if none do then we can
  * return an empty list, because we couldn't parse anything.
@@ -207,7 +157,7 @@ function parseTokens (tokens) {
 
 /* String -> [ComplexObject]
  *
- * Part Two: implement parse.
+ * Part one: implement parse.
  * Hint: use composition, and look at type signatures.
  */
 var parse = _.compose (parseTokens, tokenise);
@@ -221,36 +171,7 @@ var reply = _.curry (function (interpreter, sentence) {
     return _.compose (evaluate (interpreter), parse) (sentence);
 });
 
-/* [String] -> String
- *
- * Part one: greet all the users in one message.
- * e.g. 1
- *  - userNames = ['Bob', 'Fred']
- *  - returns "Hello Bob and Fred!"
- * e.g. 2
- *  - userNames = ['Bob', 'Fred', 'Alice']
- *  - returns "Hello Bob, Fred and Alice!"
- * e.g. 3
- *  - userNames = []
- *  - returns "Hello, anyone there?"
- * e.g. 4
- *  - userNames = ['Bob', 'Fred', 'Alice', 'Frank', 'Mary']
- *  - returns "Hello everyone!"
- *  - Note: Any number of users >= 5 produces the same result
- */
-function initialGreeting (userNames) {
-    if (userNames.length == 0) {
-        return "Hello, anyone there?";
-    } else if (userNames.length >= 5) {
-        return "Hello everyone!";
-    } else if (userNames.length == 1) {
-        return "Hello " + _.head (userNames) + "!";
-    } else {
-        return "Hello "
-            + _.join (", ") (_.slice (0, userNames.length - 1, userNames))
-            + " and " +_.last (userNames) + "!";
-    }
-}
+var initialGreeting = curry_exercises.initialGreeting;
 
 /* [String] -> [[String], [String]]
  * Split the given string list at the first occurance of a terminal
@@ -319,9 +240,6 @@ module.exports = {initialGreeting: initialGreeting,
                   parseGreeting: parseGreeting,
                   parseQuestion: parseQuestion,
                   parseStatement: parseStatement,
-                  splitOutPunctuation: splitOutPunctuation,
-                  filterNonAcceptedCharacters: filterNonAcceptedCharacters,
-                  collapseSuccessiveWhitespaces: collapseSuccessiveWhitespaces,
                   parseTokens: parseTokens,
                   sliceAllButLast: sliceAllButLast,
                   constructObject: constructObject,

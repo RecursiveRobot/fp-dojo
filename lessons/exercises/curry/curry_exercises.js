@@ -47,7 +47,97 @@ var max = function(xs) {
     }, 0, xs);
 };
 
-  
+// Exercise 4
+// ==========
+// Implement a simple function to greet users
+
+/* [String] -> String
+ *
+ * Part one: greet all the users in one message.
+ * e.g. 1
+ *  - userNames = ['Bob', 'Fred']
+ *  - returns "Hello Bob and Fred!"
+ * e.g. 2
+ *  - userNames = ['Bob', 'Fred', 'Alice']
+ *  - returns "Hello Bob, Fred and Alice!"
+ * e.g. 3
+ *  - userNames = []
+ *  - returns "Hello, anyone there?"
+ * e.g. 4
+ *  - userNames = ['Bob', 'Fred', 'Alice', 'Frank', 'Mary']
+ *  - returns "Hello everyone!"
+ *  - Note: Any number of users >= 5 produces the same result
+ */
+function initialGreeting (userNames) {
+    if (userNames.length == 0) {
+        return undefined;
+    } else if (userNames.length >= 5) {
+        return undefined;
+    } else if (userNames.length == 1) {
+        return undefined;
+    } else {
+        return "Hello "
+            + _.join (", ") (undefined)
+            + " and " + undefined + "!";
+    }
+}
+
+// Exercise 5
+// ==========
+// Implement a tokeniser function for English
+
+// Some useful regular expressions:
+var MATCH_WHITESPACE             = /[\t ]+/g;
+var MATCH_PUNCTUATION            = /([.!?])/g;
+var MATCH_NON_ACCEPTED_CHARACTER = /[^a-zA-Z.!? ]/g;
+
+/* RegEx -> String -> String -> String -> String
+ * Replace the given regular expressing with the given replacement
+ * string in the given string.
+ */
+var regexReplace = _.curry (function (pattern, replaceWith, x) {
+    return x.replace (pattern, replaceWith);
+});
+
+/* String -> String
+ * Produce a new string from the given string in which the punctuation
+ * will always be surrounded by whitespace.
+ */
+var splitOutPunctuation = function (toSplit) {
+    return undefined;
+};
+
+/* String -> String
+ * Produce a new string from the given string with non alpha
+ * numeric/puncation characters present.
+ */
+var filterNonAcceptedCharacters = regexReplace (MATCH_NON_ACCEPTED_CHARACTER, '');
+
+/* String -> String
+ * Produce a new string from the given string in which there are no
+ * successive white spaces.
+ */
+var collapseSuccessiveWhitespaces = function (toFilter) {
+    return undefined;
+};
+
+/* String -> [String]
+ *
+ * Rules:
+ *  - Tokens are separated by spaces except in the case of punctuation.
+ *  - Only alpha characters and punctuation is allowed in the token
+ *    list.
+ *  - Repeated spaces should be collapsed so that tokens separated by
+ *    repeated spaces only create a single token.
+ *
+ * Part Three: implement tokenize
+ */
+var tokenise = _.compose (_.filter (_.compose (_.not, _.equals (""))),
+                          _.split (' '),
+                          collapseSuccessiveWhitespaces);
+//                        undefined, <- uncomment and implement
+//                        undefined);
+
 // Bonus 1:
 // ============
 // wrap array's slice to be functional and curried.
@@ -66,5 +156,9 @@ module.exports = { words: words,
                    filterQs: filterQs,
                    max: max,
                    slice: slice,
-                   take: take
-                 };
+                   splitOutPunctuation: splitOutPunctuation,
+                   filterNonAcceptedCharacters: filterNonAcceptedCharacters,
+                   collapseSuccessiveWhitespaces: collapseSuccessiveWhitespaces,
+                   tokenise: tokenise,
+                   initialGreeting: initialGreeting,
+                   take: take };

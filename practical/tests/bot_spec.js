@@ -1,39 +1,7 @@
 var ChatBot = require ('../lib/chatbot');
 var assert = require("chai").assert;
 
-function removeDuplicateWhitespace (x) {
-    return x.replace (/ +/g, " ");
-}
-
 describe ("Bot test Suite", function (){
-    it ("Split out punctuation", function () {
-        assert.equal (removeDuplicateWhitespace (ChatBot.splitOutPunctuation ("")), "");
-        assert.equal (removeDuplicateWhitespace (ChatBot.splitOutPunctuation (".")), " . ");
-        assert.equal (removeDuplicateWhitespace (ChatBot.splitOutPunctuation ("?")), " ? ");
-        assert.equal (removeDuplicateWhitespace (ChatBot.splitOutPunctuation ("!")), " ! ");
-        assert.equal (removeDuplicateWhitespace (ChatBot.splitOutPunctuation ("This is a test")), "This is a test");
-        assert.equal (removeDuplicateWhitespace (ChatBot.splitOutPunctuation ("This is a test.")), "This is a test . ");
-        assert.equal (removeDuplicateWhitespace (ChatBot.splitOutPunctuation ("This is very strange. I have three fingers!")), "This is very strange . I have three fingers ! ");
-        assert.equal (removeDuplicateWhitespace (ChatBot.splitOutPunctuation ("Is your name Bob? No, my name is Steve.")), "Is your name Bob ? No, my name is Steve . ");
-    });
-    it ("Filter non accepted characters", function () {
-        assert.equal (ChatBot.filterNonAcceptedCharacters (""), "");
-        assert.equal (ChatBot.filterNonAcceptedCharacters ("Blah $%@ hr#$"), "Blah  hr");
-        assert.equal (ChatBot.filterNonAcceptedCharacters ("#$=="), "");
-    });
-    it ("Remove successive whitespace", function (){
-        assert.equal (ChatBot.collapseSuccessiveWhitespaces (""), "");
-        assert.equal (ChatBot.collapseSuccessiveWhitespaces ("  "), " ");
-        assert.equal (ChatBot.collapseSuccessiveWhitespaces ("This  is a test  to see.  whether this    	  is working."),
-                      "This is a test to see. whether this is working.");
-    });
-    it ('Initial greeting', function () {
-        assert.equal (ChatBot.initialGreeting ([]), "Hello, anyone there?");
-        assert.equal (ChatBot.initialGreeting (['Bob', 'Fred']), "Hello Bob and Fred!");
-        assert.equal (ChatBot.initialGreeting (['Bob', 'Fred', 'Alice']), "Hello Bob, Fred and Alice!");
-        assert.equal (ChatBot.initialGreeting (['Bob', 'Fred', 'Alice', 'Frank', 'Mary']), "Hello everyone!");;
-        assert.equal (ChatBot.initialGreeting (['Bob']), "Hello Bob!");
-    });
     it ("Split string up to terminal character.", function () {
         assert.deepEqual (ChatBot.splitUpToTerminal ([]), [[], []]);
         assert.deepEqual (ChatBot.splitUpToTerminal (["Blah", "test", "blerg", ".", "haha"]), [["Blah", "test", "blerg", "."], ["haha"]]);
