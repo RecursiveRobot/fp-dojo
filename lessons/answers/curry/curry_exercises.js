@@ -1,9 +1,6 @@
 require('../../support');
 var _ = require('ramda');
 
-console.log('add', map(add(2)));
-
-
 // Exercise 1
 //==============
 
