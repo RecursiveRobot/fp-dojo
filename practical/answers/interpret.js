@@ -60,18 +60,18 @@ var bestMatch = _.curry (function (aggregatedContent, sentenceObject) {
             type == Bot.STATEMENT ? aggregatedContent.statements :
             aggregatedContent.questions;
     var words = _.map (_.prop ('Value'), sentenceObject.Values);
-    var updateBestOnCurrentObject = updateBest (countWords ({}, words));
+    var updateBestOnCurrentObject = updateBest (countWords (words));
     var bestSentence = (_.reduce (updateBestOnCurrentObject,
                                   {bestMatch: undefined, bestScore: 0},
                                   contentToSearch)).bestMatch;
     return toSentence (bestSentence.thisSentence);
 });
 
-/* WordCount -> ComplexObject -> WordCount
+/* ComplexObject -> WordCount
  * Produce the word count of a given complex object (case insensitive.)
- * * Indicates that the object can have this association many times.
+ * Indicates that the object can have this association many times.
  */
-var countWords = _.reduce (accumulateCount);
+var countWords = _.reduce (accumulateCount, {});
 
 /* WordCount -> String -> WordCount
  * Increment the word count at the index defined by the given word.
@@ -126,7 +126,7 @@ var constructAssociation = _.curry (function (wordCount, thisSentence, nextSente
 var accumulateToParsed = _.curry (function (content, objects) {
     var object     = objects[0];
     var following  = objects[1];
-    var wordCount  = countWords ({}, _.map (_.prop ('Value'), object.Values));
+    var wordCount  = countWords (_.map (_.prop ('Value'), object.Values));
     var questions  = (object.Type == Bot.QUESTION)  ?
             content.questions  : _.concat (content.questions,
                                            constructAssociation (wordCount,
@@ -167,7 +167,10 @@ replyBook = function () {
     return book;
 };
 
-module.exports = {replySentence: function (sentence) {
-    return bestMatch (replyBook, sentence);},
-                  toSentence : toSentence,
-                  score : score};
+module.exports = {replySentence :
+                  function (sentence) {
+                      return bestMatch (replyBook, sentence);},
+                  toSentence    : toSentence,
+                  score         : score,
+                  updateBest    : updateBest,
+                  countWords    : countWords};
