@@ -494,13 +494,27 @@ var f = curriedAddition(1)(2)(5)(3)(4);
                     </code></pre>
                 </section>
 
+
+                <section>
+                    <h3>Two Functions for the Exercises</h3>
+                    <pre><code class="hljs" data-trim contenteditable>
+// Map, like select, is used to operate on each element in a data structure
+// e.g.
+_.map(x => x * 2, [1,2,3]);
+// [2,4,6]
+
+// Filter, is used to remove elements from a collection which don't match a predicate
+_.filter(x => x % 2 == 0, [1,2,3]);
+// [2]
+                    </code></pre>
+                </section>
                 <section data-markdown>
                     <script type="text/template">
                         ### Exercises
                         ---
                         * **Run** `npm install`
                         * **Navigate to** `lessons\exercises\curry`
-                        * **Complete an exercise in** `curry.js`
+                        * **Complete an exercise in** `curry_exercises.js`
                         * **Run** `mocha curry_exercises_spec.js` **to verify results**
                         * **Rinse, repeat**
                     </script>
@@ -653,12 +667,22 @@ var f = curriedAddition(1)(2)(5)(3)(4);
                     </script>
                 </section>
 
+                <section>
+                    <h3>A Function for the Exercises</h3>
+                    <pre><code class="hljs" data-trim contenteditable>
+// Prop, get a field from an object
+// e.g.
+var x = {'blah': 'test'};
+_.prop('blah', x);
+// 'test'                    </code></pre>
+                </section>
+
                 <section data-markdown>
                     <script type="text/template">
                         ### Exercises
                         ---
                         * **Navigate to** `lessons\exercises\compose`
-                        * **Complete an exercise in** `compose.js`
+                        * **Complete an exercise in** `compose_exercises.js`
                         * **Run** `mocha compose_exercises_spec.js` **to verify results**
                         * **Rinse, repeat**
                     </script>
